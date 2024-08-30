@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PiChess</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="../../src/CSS_Files/index.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+</head>
+
+
+
+
+
+<body>
+
+    <div class="warning">
+        <div class="warning-title">No Internet Connection</div>
+        <div class="close-button">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+
+    <img src="piece-images-2/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
+    <div class="main">
+        <div class="header-mobile">
+            <div class="nav-options-mobile">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <i class="fas fa-chess"></i>
+                PiChess.org
+            </div>
+            <div class="search-bar-mobile">
+                <i class="fas fa-search search-icon-mobile"></i>
+            </div>
+            <div class="user-info-mobile">
+                <i class="fas fa-user-plus"></i>
+            </div>
+
+
+
+        </div>
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-chess"></i>
+                PiChess.org
+            </div>
+
+            <div class="nav-options">
+                <ul>
+                    <li class="nav-option">
+                        <span>Play <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                        <div class="play-dropdown-cover">
+
+                            <div class="dropdown-option" id="play-online-button">Play Online</div>
+                            <div class="dropdown-option" id="play-mycomputer-button">Play with computer</div>
+                            <div class="dropdown-option" id="play-stockfish-button">Play with stockfish</div>
+                            <div class="dropdown-option" id="play-custom-button">Create a custom game</div>
+                        </div>
+                    </li>
+
+                    <li class="nav-option">
+                        <span>Puzzles <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                        <div class="play-dropdown-cover">
+
+                            <div class="dropdown-option">Puzzles</div>
+                            <div class="dropdown-option">Daily Puzzle</div>
+                            <div class="dropdown-option">Puzzle Rush</div>
+                            <div class="dropdown-option">Puzzle Battle</div>
+                            <div class="dropdown-option">Solo Chess</div>
+                            <div class="dropdown-option">Drills</div>
+                        </div>
+                    </li>
+                    <li class="nav-option">
+                        <span>Learn <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                        <div class="play-dropdown-cover">
+
+                            <div class="dropdown-option">Openings</div>
+                            <div class="dropdown-option">Chess Lessons</div>
+                            <div class="dropdown-option">Chess Terms</div>
+                            <div class="dropdown-option">Chess Rules</div>
+                            <div class="dropdown-option">Improve Vision</div>
+                            <div class="dropdown-option">Master Games</div>
+                            <div class="dropdown-option">Explorer</div>
+                        </div>
+                    </li>
+                    <li class="nav-option">
+                        <span>Today <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                        <div class="play-dropdown-cover">
+
+                            <div class="dropdown-option">Chess Tody</div>
+                            <div class="dropdown-option">Chess TV</div>
+                            <div class="dropdown-option">Playing Now</div>
+                            <div class="dropdown-option">Streamers</div>
+                            <div class="dropdown-option">Events</div>
+                        </div>
+                    </li>
+                    <li class="nav-option">
+                        <span>More <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                        <div class="play-dropdown-cover">
+
+                            <div class="dropdown-option">Donate</div>
+                            <div class="dropdown-option">Feedback</div>
+                            <div class="dropdown-option">Downloads</div>
+                            <div class="dropdown-option">Contact</div>
+
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="search" class="input search-input">
+            </div>
+
+            <div class="sign-in" onclick="window.location.href='/login'">
+                Log In
+            </div>
+            <div class="sign-up" onclick="window.location.href='/signup'">
+                Sign Up
+            </div>
+        </div>
+
+        <div class="info">
+            <div class="hero">
+                <h2>
+                    Welcome to the unknown website of Chess!. Here you will find Millions of Online Players. You can
+                    also test your skills against our AI.
+
+                </h2>
+            </div>
+            <!-- <div class="games-info">
+                <div class="online-players-count"><i class="fas fa-circle " style="color: var(--secondary);"></i> 1225
+                    &nbsp;
+                    players online</div>
+                <div class="games-in-progress-count"><i class="fas fa-circle" style="color: rgb(21, 74, 197);"></i> 122
+                    &nbsp;
+                    Games being
+                    played Now</div>
+                <div class="players-confused-count"><i class="fas fa-circle" style="color: var(--accent);"></i> 125548
+                    &nbsp;
+                    players are confused right now!</div>
+            </div> -->
+            <div class="secondary-play-options">
+                <h2 class="secondary-play-option big-button" style="background-color: var(--secondary);"
+                    onclick="window.location.href='/play'">
+                    Play Now
+                </h2>
+                <h2 class="secondary-play-option big-button" style="border: 1px solid var(--secondary);">
+
+                    Learn Chess
+                </h2>
+            </div>
+        </div>
+
+        <div class="card puzzle-of-the-day">
+
+
+            <div class="main-puzzle">
+                <div class="puzzle-board">
+                    <div class="rank">
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                    </div>
+                    <div class="rank">
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                    </div>
+                    <div class="rank">
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                    </div>
+                    <div class="rank">
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                    </div>
+                    <div class="rank">
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                    </div>
+                    <div class="rank">
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                    </div>
+                    <div class="rank">
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                    </div>
+                    <div class="rank">
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                        <div class="square dark-square"></div>
+                        <div class="square light-square"></div>
+                    </div>
+
+                </div>
+                <div class="puzzle-details">
+
+
+                    <div class="puzzle-description">
+                        <h1>Solve Chess Puzzles</h1>
+
+                    </div>
+
+                    <div class="puzzle-try-buttons">
+                        <h2 class="try-puzzle big-button">
+                            Solve Puzzles
+                        </h2>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card blogs">
+            <div style="align-self: center;">
+                <h1>Blogs</h1>
+
+            </div>
+            <div class="blog-wrapper">
+                <div class="blog-image">
+                    <img src="../../assets/image-files/chess.com-image.png" alt="" class="image">
+                </div>
+                <div class="blog-description">
+                    <div class="blog-author">
+                        <div class="blog-image-mobile">
+                            <img src="../../assets/image-files/chess.com-image.png" alt="" class="image">
+                        </div>
+                        <div class="author-name">
+
+                            Chess.com
+                        </div>
+                    </div>
+                    <div class="blog-title">Chess.com's New Events Feature</div>
+
+                    <div class="blog-content">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea esse distinctio repellat
+                        blanditiis
+                        repudiandae aliquid illum, repellendus eum totam accusamus ipsa eos minus dolorem eligendi?
+
+                        <a href="">Read More</a>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="blog-wrapper">
+                <div class="blog-image">
+                    <img src="../../assets/image-files/magnus.jpeg" alt="" class="image">
+                </div>
+                <div class="blog-description">
+                    <div class="blog-author">
+                        <div class="blog-image-mobile">
+                            <img src="../../assets/image-files/magnus.jpeg" alt="" class="image">
+                        </div>
+                        <div class="author-name">
+
+                            Magnus Carlsen
+                        </div>
+                    </div>
+                    <div class="blog-title">How to lose from Hikaru Nakamura</div>
+
+                    <div class="blog-content">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea esse distinctio repellat blanditiis
+                        repudiandae aliquid illum, repellendus eum totam accusamus ipsa eos minus dolorem eligendi?
+                        <a href="">Read More</a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="blog-wrapper">
+                <div class="blog-image">
+                    <img src="../../assets/image-files/hikaru.jpeg" alt="" class="image">
+                </div>
+                <div class="blog-description">
+                    <div class="blog-author">
+                        <div class="blog-image-mobile">
+                            <img src="../../assets/image-files/hikaru.jpeg" alt="" class="image">
+                        </div>
+                        <div class="author-name">
+
+                            Hikaru Nakamura
+                        </div>
+                    </div>
+                    <div class="blog-title">How to beat Magnus Carlsen</div>
+
+                    <div class="blog-content">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea esse distinctio repellat blanditiis
+                        repudiandae aliquid illum, repellendus eum totam accusamus ipsa eos minus dolorem eligendi?
+                        <a href="">Read More</a>
+
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="write-blog-button big-button">
+                Write A Blog
+            </h2>
+        </div>
+
+        <div class="chess-today" style="display: flex;justify-content: center;">
+            <div style="align-self: center;">
+                <h2 class="big-button" style="align-self: center;">Chess Today</h2>
+
+            </div>
+        </div>
+
+        <div class="advanced-footer">
+            <div class="footer-links">
+                <a href="" class="footer-link">Help</a> |
+                <a href="" class="footer-link">Chess Terms</a> |
+                <a href="" class="footer-link">About</a> |
+                <a href="" class="footer-link">Students</a> |
+                <a href="" class="footer-link">Jobs</a> |
+                <a href="" class="footer-link">Developers</a> |
+                <a href="" class="footer-link">User Agreement</a> |
+                <a href="" class="footer-link">Privace</a> |
+                <a href="" class="footer-link">Fair Play</a> |
+                <a href="" class="footer-link">Partners</a> |
+                <a href="" class="footer-link">PiChess.org &copy; 2023-2024</a>
+            </div>
+
+            <div class="footer-options">
+                <div class="footer-download-options">
+                    <a href="" class="footer-download-option footer-option"><i class="fab fa-apple"></i>
+                    </a>
+                    <a href="" class="footer-download-option footer-option"><i class="fab fa-android"></i></a>
+
+                </div>
+                <div class="footer-contact-options">
+                    <a href=""><i class="footer-option fab fa-facebook"></i></a>
+                    <a href=""><i class="footer-option fab fa-twitter"></i></a>
+                    <a href=""><i class="footer-option fab fa-instagram"></i></a>
+                    <a href=""><i class="footer-option fab fa-youtube"></i></a>
+                    <a href=""><i class="footer-option fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="contact">
+                <div>
+                    <span class="title">Find us on</span>
+                    <div>
+
+                        <i class=" contact-icon fab fa-facebook"></i>
+                        <img src="../../assets/image-files/logo-white.png" class="image contact-icon"
+                            style="width: 1.4vw;" alt="">
+                        <i class="contact-icon fab fa-instagram"></i>
+                        <i class="contact-icon fab fa-youtube"></i>
+                    </div>
+                </div>
+                <div>
+                    <span class="title">Download PiChess</span>
+                    <div>
+                        <i class="download-icon fab fa-android"></i>
+                        <i class="download-icon fab fa-apple"></i>
+
+                    </div>
+                </div>
+
+            </div>
+            <div style="display: flex;">
+                <div class="about">
+                    <div>About</div>
+                    <div>Help</div>
+                    <div>Language</div>
+                    <div>Contact Us</div>
+
+                </div>
+
+                <div class="community">
+
+                    <div>Developer Community</div>
+                    <div>Community</div>
+                    <div>User Aggrement</div>
+                    <div>Privacy Policy</div>
+                    <div>Fair Play</div>
+
+                </div>
+            </div>
+
+            <div class="copyright" style="align-self: flex-end;">
+                <div class="logo">
+                    <i class="fas fa-chess"></i>PiChess
+
+                </div>
+
+                &copy;2023-2024
+
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="../../src/JS_FIles/index.js"></script>
+
+
+</html>

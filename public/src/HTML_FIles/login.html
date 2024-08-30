@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto+Slab:wght@100..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+    :root {
+        --body-color: #222;
+        --body-color: #312e2b;
+
+        --primary: rgb(23, 23, 23);
+        --default-color: #bababa;
+        --accent: rgb(205, 40, 18);
+        --secondary: #5f8805;
+        --puzzle-board-width: 32vw;
+        --puzzle-board-width-mobile: 96vw;
+        --square-width: 4vw;
+        --square-width-mobile: 12vw;
+        --active-color: #2c3e50;
+        --highlight-circle-width: 1.2vw;
+        --highlight-circle-width-mobile: 3.8vw;
+        --piece-width: 4vw;
+        --piece-width-mobile: 12vw;
+
+    }
+
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+
+        font-family: "Exo 2", sans-serif;
+        font-family: "Mukta", sans-serif;
+
+        color: var(--default-color);
+        background-color: var(--body-color);
+        margin: 0;
+        padding: 0;
+    }
+
+
+    .login-box-wrapper {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* background-color: rgba(0, 0, 0, 0.1); */
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+    }
+
+    .login-box {
+        padding: 0.5%;
+        display: flex;
+        flex-direction: column;
+        background-color: #222;
+        background-color: rgba(0, 0, 0, 0.2);
+        justify-content: center;
+        align-items: center;
+        width: 40vw;
+        border-radius: 5px;
+        box-shadow: 0px 0px 3px grey;
+    }
+
+    .login-box>div {
+        margin-bottom: 5%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+    }
+
+    .absolute-image {
+        position: absolute;
+        opacity: 0.01;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        object-fit: cover;
+    }
+
+    .mini-logo {
+        padding: 1%;
+        font-size: xx-large;
+        background-color: #333;
+    }
+
+
+    .login-options {
+        color: white;
+        display: flex;
+        flex-direction: row;
+
+    }
+
+    .login-options>div {
+
+        padding: 1%;
+        cursor: pointer;
+        text-align: center;
+        margin: 0 1%;
+        width: 35%;
+        border-radius: 3px;
+    }
+
+    .login {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 1vw;
+        margin-right: 1vw;
+        min-width: 10vw;
+    }
+
+    .login-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .email,
+    .password {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .email-input,
+    .password-input {
+        padding: 1.5%;
+        color: var(--default-color);
+        background-color: rgba(0, 0, 0, 0.2);
+        border: 1px solid grey;
+        border-radius: 5px;
+        margin-bottom: 1%;
+        width: 70%;
+        outline: none;
+        font-size: 15px;
+
+    }
+
+    .email-input:focus,
+    .password-input:focus {
+        box-shadow: 0px 0px 2px #fff;
+    }
+
+    .forgot-password {
+        font-size: small;
+
+    }
+
+
+
+    a {
+        text-decoration: none;
+        color: var(--secondary);
+    }
+
+
+
+    @keyframes show {
+        0% {
+            height: 0;
+        }
+
+        100% {
+            height: 8vh;
+        }
+
+    }
+
+    .success-message {
+        position: absolute;
+        text-align: center;
+        background-color: var(--secondary);
+        left: 0;
+        top: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: large;
+        height: 8vh;
+        font-weight: bold;
+        animation: show 0.3s;
+
+
+        display: none;
+    }
+
+    .title {
+        text-align: center;
+    }
+
+    .big-button {
+        cursor: pointer;
+        border-radius: 3px;
+        padding: 0.5vw 0.5vw;
+        box-shadow: 3px 0px 0px rgba(93, 131, 5, 0.6), 3px 0px 0px rgba(120, 180, 15, 0.6);
+        background-image: linear-gradient(to bottom, #6d9e05, #5f8805);
+        color: white;
+
+    }
+
+    .guest-login {
+        background-image: none;
+        box-shadow: none;
+        border: 2px solid var(--secondary);
+    }
+
+    .guest-login:hover {
+        background-color: var(--secondary);
+    }
+
+    .warning-message-wrapper {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        height: 9vh;
+        width: 100%;
+        z-index: 10;
+        display: none;
+        animation: show 0.2s;
+    }
+
+    .warning-message {
+
+        min-width: 50%;
+        max-width: 95%;
+        display: flex;
+        padding: 1%;
+        justify-content: space-between;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        text-align: center;
+        align-items: center;
+        font-size: large;
+        font-weight: bold;
+        background-color: var(--accent);
+        border: 5px solid var(--accent);
+        background-color: rgb(224, 33, 33);
+
+    }
+
+    .warning-message-text {
+        max-width: 90%;
+    }
+
+    .warning-close-button {
+        cursor: pointer;
+    }
+
+    @media screen and (max-width:800px) {
+        .login-box {
+            width: 95vw;
+        }
+
+    }
+</style>
+
+<body>
+    <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
+
+    <div class="warning-message-wrapper">
+
+        <div class="warning-message">
+            <div class="warning-message-text"></div>
+            <div class="warning-close-button"
+                onclick="document.getElementsByClassName('warning-message-wrapper')[0].style.display='none'"><i
+                    class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+    <div class="success-message"></div>
+
+    <div class="login-box-wrapper">
+
+        <div class="login-box">
+
+            <div class="mini-logo"> <i class="fas fa-chess"></i> PiChess</div>
+
+            <div class="title">
+                <h2>Login with your PiChess Credentials.</h2>
+            </div>
+            <div class="login-details">
+                <div class="email">
+                    <input type="text" placeholder="email" class="email-input input" value="test@gmail.com">
+                </div>
+                <div class=" password">
+                    <input type="password" placeholder="password" class="password-input input" value="LhwCPmB1">
+                </div>
+            </div>
+
+            <div class="login-options">
+
+                <h3 class="login big-button">
+                    Login
+                </h3>
+            </div>
+
+            <div class="already-user">
+                Do not have an account? &nbsp;<a href="/signup">sign up</a>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    /*Extracting URL parameters*/
+    const urlObj = new URL(window.location.href);
+
+    // Access the search parameters
+    const params = urlObj.searchParams;
+    const returnUrl = params.get('returnUrl')
+    //
+
+
+
+    let loginButton = document.getElementsByClassName("login")[0];
+    loginButton.addEventListener('click', e => {
+        let email = document.getElementsByClassName('email-input')[0].value;
+        let password = document.getElementsByClassName('password-input')[0].value;
+        verifyCredentials(email, password)
+            .then(responce => {
+                if (responce.ok) {
+                    successMessage("Authentication Successful")
+                    if (returnUrl) {
+                        window.location.href = '/' + returnUrl;
+
+                    }
+                    else {
+                        window.location.href = responce.url
+
+                    }
+                }
+                else {
+                    warningMessage("Invalid Credentials")
+
+                }
+            })
+            .catch(err => {
+                warningMessage(err);
+            })
+    })
+
+    async function verifyCredentials(email, password) {
+
+        const postData = { email, password };
+        const responce = await sendPostRequest('/authentication', postData)
+        return responce;
+
+    }
+
+
+    async function sendPostRequest(url, postData) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any other headers if needed
+                },
+                body: JSON.stringify(postData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const responseData = await response.json();
+            return responseData;
+        } catch (error) {
+            console.error('Error during POST request:', error);
+            // You can handle the error here, e.g., display a message to the user
+            throw error; // Rethrow the error to propagate it
+        }
+    }
+    function warningMessage(warning) {
+        document.getElementsByClassName('warning-message-wrapper')[0].style.display = 'flex'
+        document.getElementsByClassName('warning-message-text')[0].innerHTML = warning
+        setTimeout(() => {
+            // document.getElementsByClassName('warning-message-wrapper')[0].style.display = 'none'
+
+        }, 2000)
+    }
+
+
+    function successMessage(success) {
+        document.getElementsByClassName('success-message')[0].innerHTML = success
+        document.getElementsByClassName('success-message')[0].style.display = 'flex'
+        setTimeout(() => {
+            document.getElementsByClassName('success-message')[0].style.display = 'none'
+
+        }, 2000)
+    }
+</script>
+
+</html>

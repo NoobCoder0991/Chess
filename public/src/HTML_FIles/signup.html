@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Heebo:wght@300&family=Nunito+Sans:opsz,wght@6..12,300&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Oxygen&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+
+    @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+    :root {
+        --body-color: #312e2b;
+        --primary: rgb(23, 23, 23);
+        --default-color: #bababa;
+        --accent: rgb(205, 40, 18);
+        --secondary: #5f8805;
+        --square-width: 3.5vw;
+        --square-width-mobile: 12vw;
+
+    }
+
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+
+        font-family: "Mukta", sans-serif;
+        color: #bababa;
+        background-color: var(--body-color);
+        background-color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+
+    .login-box-wrapper {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+    }
+
+    .login-box {
+        padding: 0.5%;
+        display: flex;
+        flex-direction: column;
+        background-color: #222;
+        justify-content: center;
+        align-items: center;
+        width: 40vw;
+        border-radius: 5px;
+        box-shadow: 0px 0px 3px grey;
+    }
+
+    .login-box>div {
+        margin-bottom: 5%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+    }
+
+    .absolute-image {
+        position: absolute;
+        opacity: 0.01;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        object-fit: cover;
+    }
+
+    .mini-logo {
+        padding: 1%;
+        font-size: xx-large;
+        background-color: #333;
+    }
+
+
+    .login-options {
+        color: white;
+        display: flex;
+        flex-direction: row;
+
+    }
+
+    .login-options>div {
+
+        padding: 1%;
+        text-align: center;
+        margin: 0 1%;
+        width: 35%;
+        border-radius: 3px;
+    }
+
+    .login {
+        background-color: var(--secondary);
+        cursor: pointer;
+    }
+
+    .disabled-login {
+        background-color: #435718;
+        cursor: not-allowed;
+    }
+
+    .login-details {
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    .email,
+    .username {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .email-input,
+    .username-input {
+        padding: 1.5%;
+        color: var(--default-color);
+        background-color: #222;
+        border: 1px solid grey;
+        border-radius: 5px;
+        margin-bottom: 1%;
+        width: 70%;
+        outline: none;
+        font-size: 15px;
+
+    }
+
+    .email-input:focus,
+    .username-input:focus {
+        box-shadow: 0px 0px 2px #fff;
+    }
+
+    .warning-message {
+
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 8vh;
+        background-color: #333;
+        animation: show 0.3s;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: large;
+        font-weight: bold;
+        background-color: var(--accent);
+        display: none;
+
+    }
+
+    @keyframes show {
+        0% {
+            height: 0;
+        }
+
+        100% {
+            height: 8vh;
+        }
+
+    }
+
+    .success-message {
+        position: absolute;
+        text-align: center;
+        background-color: var(--secondary);
+        left: 0;
+        top: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: large;
+        height: 8vh;
+        font-weight: bold;
+        animation: show 0.3s;
+
+
+        display: none;
+    }
+
+    .title {
+        text-align: center;
+    }
+
+    @media screen and (max-width:800px) {
+        .login-box {
+            width: 95vw;
+        }
+
+    }
+</style>
+
+<body>
+    <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
+    <div class="warning-message"></div>
+    <div class="success-message"></div>
+
+    <div class="login-box-wrapper">
+
+
+        <div class="login-box">
+            <div class="mini-logo"> <i class="fas fa-chess"></i> PiChess</div>
+            <div class="title">
+                <h2> Sign up with your email address and username.</h2>
+            </div>
+
+            <div class="login-details">
+                <div class="email">
+                    <input type="text" placeholder="email" class="email-input input" value="shafaath508@gmail.com">
+                </div>
+                <div class="username">
+                    <input type="text" placeholder="What should we call you?" class="username-input input">
+                </div>
+
+            </div>
+
+            <div class="login-options">
+
+                <div class="login" onclick="sendOTP()">Get Code</div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+
+
+<script>
+
+    let emailInput = document.getElementsByClassName('email-input')[0];
+    let usernameInput = document.getElementsByClassName('username-input')[0]
+    let otpRequest = false;
+
+    function sendOTP() {
+
+        let email = emailInput.value;
+        let username = usernameInput.value
+        if (checkEmailFormat(email) && username && !otpRequest) {
+            loadingAnimation(document.getElementsByClassName('login')[0])
+            otpRequest = true;
+            document.getElementsByClassName('login')[0].classList.add('disabled-login')
+
+            sendPostRequest('/getotp', { email: email, username: username })
+                .then(data => {
+                    console.log(data)
+                    if (data.ok) {
+                        successMessage(data.message)
+                        window.location.href = "/signup/auth?token=" + encodeURIComponent(data.url)
+                    }
+                    else {
+                        warningMessage(data.message)
+                    }
+                    document.getElementsByClassName('login')[0].classList.remove('disabled-login')
+                    document.getElementsByClassName('login')[0].innerHTML = 'Get Code'
+                    otpRequest = false;
+                })
+                .catch(err => {
+                    warningMessage(err)
+                    document.getElementsByClassName('login')[0].classList.remove('disabled-login')
+                    document.getElementsByClassName('login')[0].innerHTML = 'Get Code'
+                    otpRequest = false;
+
+                })
+
+        }
+        else {
+            if (!otpRequest) {
+
+                if (usernameInput.value == "") {
+                    warningMessage("Username can not be empty!")
+                }
+                else {
+
+                    warningMessage('Enter a valid email address')
+                }
+            }
+
+        }
+    }
+
+
+
+    function checkEmailFormat(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    function warningMessage(warning) {
+        document.getElementsByClassName('warning-message')[0].innerHTML = warning
+        document.getElementsByClassName('warning-message')[0].style.display = 'flex'
+        setTimeout(() => {
+            document.getElementsByClassName('warning-message')[0].style.display = 'none'
+
+        }, 2000)
+    }
+
+    function successMessage(success) {
+        document.getElementsByClassName('success-message')[0].innerHTML = success
+        document.getElementsByClassName('success-message')[0].style.display = 'flex'
+        setTimeout(() => {
+            document.getElementsByClassName('success-message')[0].style.display = 'none'
+
+        }, 2000)
+    }
+
+
+    async function sendPostRequest(url, postData) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any other headers if needed
+                },
+                body: JSON.stringify(postData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const responseData = await response.json();
+            return responseData;
+        } catch (error) {
+            console.error('Error during POST request:', error);
+            // You can handle the error here, e.g., display a message to the user
+            throw error; // Rethrow the error to propagate it
+        }
+    }
+
+
+    function loadingAnimation(element) {
+        element.innerHTML = "<i class='fas fa-spinner fa-spin'><i>"
+    }
+</script>
+
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Play Online</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="../../src/CSS_Files/black.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+
+</head>
+
+<body>
+
+    <div class="opponent-draw">
+        <div class="draw-bar">
+
+        </div>
+        <div class="draw-details">
+
+            <div>Opponent has offered a Draw</div>
+            <div class="accept" onclick="drawAckn()"><i class="fas fa-check"></i></div>
+            <div class="reject " onclick="drawRej()"><i class="fas fa-times"></i></div>
+        </div>
+    </div>
+
+    <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
+    <div class="warning-wrapper">
+        <div class="warning-container">
+            <div class="mini-logo"> <i class="fas fa-chess"></i>
+                <special>Cheating Detected</special>
+            </div>
+
+
+            <div class="body">
+
+                Dear <span class="cheater-username"></span>,
+                You just played an illegal move. This violates our <a href="">Fair Play</a> policy.
+                You have been put under <a href="">Yellow Player List</a>.
+
+                If such a thing happens again, your account will be permanently blocked.
+
+
+
+
+
+            </div>
+
+            <div class="greeting">
+                Team <i class="fas fa-chess"></i> PiChess
+            </div>
+
+            <div class="user-understand-button">
+                <div class="goback"
+                    onclick="document.getElementsByClassName('warning-wrapper')[0].style.display='none'">I Understand
+                    >I Understand</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="gameover-box-wrapper">
+
+        <div style="display: flex;flex-direction: column;">
+            <div class="wrapper-close"
+                onclick="document.getElementsByClassName('gameover-box-wrapper')[0].style.display='none'"><i
+                    class=" fas fa-times"></i></div>
+
+            <div class="gameover-box">
+                <div class="mini-logo"><i class="fas fa-chess"></i>&nbsp; PiChess</div>
+                <div class="result-title">
+                    <div class="winner-name"></div>
+                    <div class="win-reason"></div>
+
+                </div>
+                <div class="player-icons">
+                    <div class="white-side">
+                        <div class="name"></div>
+                        <div class="chess-side">
+                            <img src="../../assets/image-files/default_profile.gif" class="profile-image">
+                        </div>
+
+                        <div class="rating-details">
+                            <div class="rating"></div>
+                            <div class="change"></div>
+                        </div>
+
+                    </div>
+                    <div class="black-side">
+                        <div class="name"></div>
+                        <div class="chess-side">
+                            <img src="../../assets/image-files/default_profile.gif" class="profile-image">
+                        </div>
+                        <div class="rating-details">
+                            <div class="rating"></div>
+                            <div class="change"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="analysis-options">
+                    <div class="analyse">Analyse Game</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="game-details">
+        <div class="title">
+            <h2>Play Computer</h2>
+        </div>
+        <div class="sides">
+            <div class="side fas fa-chess-king active-side" style="color: white"></div>
+            <div class="side fas fa-chess-king" style="color: black"></div>
+        </div>
+        <div class="subtitle">Strength</div>
+        <div class="levels">
+            <div class="level">1</div>
+            <div class="level">2</div>
+            <div class="level">3</div>
+            <div class="level active-level">4</div>
+            <div class="level">5</div>
+            <div class="level">6</div>
+            <div class="level">7</div>
+            <div class="level">8</div>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center">
+            <div class="button cancel-computer-button">cancel</div>
+            <div class="button play-computer-button">Play</div>
+        </div>
+    </div>
+    </div>
+    <div class="header-mobile">
+        <div class="nav-options-mobile">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo">
+            <i class="fas fa-chess"></i>
+            PiChess.org
+            <!-- <img src="/public/piece-images-2/PiChess.png" alt="" class="logo-image"> -->
+        </div>
+        <div class="search-bar-mobile">
+            <i class="fas fa-search search-icon-mobile"></i>
+        </div>
+        <div class="user-info-mobile">
+            <i class="fas fa-user-plus"></i>
+        </div>
+
+
+
+    </div>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-chess"></i>
+            PiChess.org
+        </div>
+
+        <div class="nav-options">
+            <ul>
+                <li class="nav-option">
+                    <span>Play <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                    <div class="play-dropdown-cover">
+
+                        <div class="dropdown-option" id="play-online-button">Play Online</div>
+                        <div class="dropdown-option" id="play-mycomputer-button">Play with computer</div>
+                        <div class="dropdown-option" id="play-stockfish-button">Play with stockfish</div>
+                        <div class="dropdown-option" id="play-custom-button">Create a custom game</div>
+                    </div>
+                </li>
+
+                <li class="nav-option">
+                    <span>Puzzles <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                    <div class="play-dropdown-cover">
+
+                        <div class="dropdown-option">Puzzles</div>
+                        <div class="dropdown-option">Daily Puzzle</div>
+                        <div class="dropdown-option">Puzzle Rush</div>
+                        <div class="dropdown-option">Puzzle Battle</div>
+                        <div class="dropdown-option">Solo Chess</div>
+                        <div class="dropdown-option">Drills</div>
+                    </div>
+                </li>
+                <li class="nav-option">
+                    <span>Learn <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                    <div class="play-dropdown-cover">
+
+                        <div class="dropdown-option">Openings</div>
+                        <div class="dropdown-option">Chess Lessons</div>
+                        <div class="dropdown-option">Chess Terms</div>
+                        <div class="dropdown-option">Chess Rules</div>
+                        <div class="dropdown-option">Improve Vision</div>
+                        <div class="dropdown-option">Master Games</div>
+                        <div class="dropdown-option">Explorer</div>
+                    </div>
+                </li>
+                <li class="nav-option">
+                    <span>Today <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                    <div class="play-dropdown-cover">
+
+                        <div class="dropdown-option">Chess Tody</div>
+                        <div class="dropdown-option">Chess TV</div>
+                        <div class="dropdown-option">Playing Now</div>
+                        <div class="dropdown-option">Streamers</div>
+                        <div class="dropdown-option">Events</div>
+                    </div>
+                </li>
+                <li class="nav-option">
+                    <span>More <i class="fas fa-caret-down down-arrow-icon"></i></span>
+                    <div class="play-dropdown-cover">
+
+                        <div class="dropdown-option">Donate</div>
+                        <div class="dropdown-option">Feedback</div>
+                        <div class="dropdown-option">Downloads</div>
+                        <div class="dropdown-option">Contact</div>
+
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div style="width: 100%; overflow-x: scroll;">
+
+        <div class="analysis-board-mobile"></div>
+    </div>
+
+    <div class="main">
+        <div class="board">
+            <div class="topPlayer whitePlayer">
+
+                <div class="player-profile" id="my-profile">
+
+                    <div class="profile-title">
+
+                    </div>
+                    <div class="profile-name">
+
+
+
+
+                    </div>
+                    <div class="profile-rating">
+
+
+
+                    </div>
+                    <div class="reconnecting">
+                        <i class="fas fa-unlink"></i>
+                    </div>
+                    <div class="reconnected">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                </div>
+                <div class="timer white-timer">
+                    <div class="timer-icon"><i class="fas fa-stopwatch"></i></div>
+                    <div class="min"></div>
+                    <div>:</div>
+                    <div class="sec"></div>
+                </div>
+            </div>
+            <div id="chessBoard">
+                <div class="board-wrapper">
+
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+            </div>
+            <div class="bottomPlayer blackPlayer">
+
+                <div class="player-profile" id="opponent-profile">
+
+                    <div class="profile-title">
+
+                    </div>
+                    <div class="profile-name">
+
+                    </div>
+                    <div class="profile-rating">
+
+                    </div>
+                    <div class="reconnecting">
+                        <i class="fas fa-unlink"></i>
+                    </div>
+                    <div class="reconnected">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+
+                </div>
+                <div class="timer black-timer disabled-black-timer">
+                    <div class="timer-icon"><i class="fas fa-stopwatch"></i></div>
+                    <div class="min"></div>
+                    <div>:</div>
+                    <div class="sec"></div>
+                </div>
+            </div>
+        </div>
+        <div class="second-board">
+
+            <div class="second-board-title">
+                <i class="fas fa-chess"></i> &nbsp;PiChess Game Analysis
+            </div>
+
+
+            <div class="actions">
+                <div class="undo-move action ">
+                    <div class="icon"><i class="fas fa-chess-board "></i></div>
+                </div>
+
+                <div class="start-move action ">
+                    <div class="icon"><i class="fas fa-fast-backward"></i></div>
+                </div>
+                <div class="previous-move action ">
+                    <div class="icon"><i class="fas fa-backward"></i></div>
+                </div>
+                <div class="next-move action ">
+                    <div class="icon"><i class="fas fa-forward"></i></div>
+                </div>
+                <div class="end-move action ">
+                    <div class="icon"><i class="fas fa-fast-forward"></i></div>
+                </div>
+            </div>
+
+
+            <div class="analysis-board original">
+
+
+            </div>
+
+            <div class="bottom-actions">
+                <div class="resign bottom-action disabled">
+                    <div class="icon"><i class="fas fa-flag"></i></div>
+                    <div>Resign</div>
+                </div>
+                <div class="draw bottom-action disabled ">
+                    <div class="icon">&frac12</div>
+                    <div>Draw</div>
+                </div>
+                <div class="bottom-action new-game enabled"><i class="fas fa-plus"></i></div>
+                <div class="bottom-action abort enabled">
+                    <i class="fas fa-times"></i>
+                    <div>Abort</div>
+                </div>
+
+            </div>
+
+            <div class="save-game  enabled">Save Game</div>
+        </div>
+
+
+
+    </div>
+
+
+</body>
+
+<script src="../../src/JS_FIles/black.js"></script>
+
+</html>

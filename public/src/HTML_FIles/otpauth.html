@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Heebo:wght@300&family=Nunito+Sans:opsz,wght@6..12,300&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Oxygen&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+
+    :root {
+        --body-color: #222;
+        --primary: rgb(23, 23, 23);
+        --default-color: #bababa;
+        --accent: rgb(205, 40, 18);
+        --secondary: #5f8805;
+        --puzzle-board-width: 32vw;
+        --puzzle-board-width-mobile: 96vw;
+        --square-width: 4vw;
+        --square-width-mobile: 12vw;
+        --active-color: #2c3e50;
+        --highlight-circle-width: 1.2vw;
+        --highlight-circle-width-mobile: 3.8vw;
+        --piece-width: 4vw;
+        --piece-width-mobile: 12vw;
+
+    }
+
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+
+        font-family: "Exo 2", sans-serif;
+        color: #bababa;
+        background-color: var(--body-color);
+        background-color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+
+    .register-box-wrapper {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+    }
+
+    .register-box {
+        padding: 0.5%;
+        display: flex;
+        flex-direction: column;
+        background-color: #222;
+        justify-content: center;
+        align-items: center;
+        width: 40vw;
+        border-radius: 5px;
+        box-shadow: 0px 0px 3px grey;
+    }
+
+    .register-box>div {
+        margin-bottom: 5%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+    }
+
+    .absolute-image {
+        position: absolute;
+        opacity: 0.01;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        object-fit: cover;
+    }
+
+    .mini-logo {
+        padding: 1%;
+        font-size: xx-large;
+        text-align: center;
+        width: 100%;
+        background-color: #333;
+    }
+
+
+    .register-options {
+        color: white;
+        display: flex;
+        flex-direction: row;
+
+    }
+
+    .register-options>div {
+
+        padding: 1%;
+        text-align: center;
+        margin: 0 1%;
+        width: 35%;
+        border-radius: 3px;
+    }
+
+    .register {
+        background-color: var(--secondary);
+        cursor: pointer;
+    }
+
+    .disabled-register {
+        background-color: #435718;
+        cursor: not-allowed;
+    }
+
+    .register-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    .code {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+    .register-input {
+        padding: 1.5%;
+        color: var(--default-color);
+        background-color: #222;
+        border: 1px solid grey;
+        border-radius: 5px;
+        margin-bottom: 1%;
+        width: 70%;
+        outline: none;
+        font-size: 15px;
+
+    }
+
+    .warning-message {
+
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 8vh;
+        background-color: #333;
+        animation: show 0.3s;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: large;
+        font-weight: bold;
+        background-color: var(--accent);
+        display: none;
+
+    }
+
+    @keyframes show {
+        0% {
+            height: 0;
+        }
+
+        100% {
+            height: 8vh;
+        }
+
+    }
+
+    .success-message {
+        position: absolute;
+        text-align: center;
+        background-color: var(--secondary);
+        left: 0;
+        top: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: large;
+        height: 8vh;
+        font-weight: bold;
+        animation: show 0.3s;
+        display: none;
+    }
+
+    .success-wrapper {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+
+    .success-container {
+        padding: 1%;
+        display: flex;
+        flex-direction: column;
+        background-color: #222;
+        justify-content: center;
+
+        width: 50vw;
+        border-radius: 5px;
+        box-shadow: 0px 0px 3px grey;
+
+    }
+
+    .failed-wrapper {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+
+    .failed-container {
+        padding: 1%;
+        display: flex;
+        flex-direction: column;
+        background-color: #222;
+        justify-content: center;
+
+        width: 50vw;
+        border-radius: 5px;
+        box-shadow: 0px 0px 3px grey;
+
+    }
+
+    .greeting {
+        color: #5f8805;
+        font-weight: bold;
+        font-size: large;
+        margin: 3% 0;
+    }
+
+    .body {
+        line-height: 1.5;
+    }
+
+    special {
+        color: var(--accent);
+    }
+
+    .actions {
+        display: flex;
+        align-self: center;
+    }
+
+    .actions>div {
+        margin: 0 1vw;
+        padding: 0.5vw 1vw;
+        text-wrap: nowrap;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .goback {
+        background-color: var(--accent);
+    }
+
+    .login {
+        background-color: var(--secondary);
+    }
+
+    @media screen and (max-width:800px) {
+        .register-box {
+            width: 95vw;
+        }
+
+        .success-container {
+            width: 95vw;
+        }
+
+        .failed-container {
+            width: 95vw;
+        }
+
+    }
+</style>
+
+<body>
+
+    <div class="failed-wrapper">
+        <div class="failed-container">
+            <div class="mini-logo"> <i class="fas fa-chess"></i>
+                <special>Failed</special>
+            </div>
+
+
+            <div class="body">
+                Email authentication failed:
+                <reasonFail>Unknown Reason</reasonFail>
+
+
+            </div>
+
+            <div class="greeting">
+                Team <i class="fas fa-chess"></i> PiChess
+            </div>
+
+            <div class="actions">
+                <div class="goback" onclick="window.location.href='/signup'">Go Back</div>
+            </div>
+
+        </div>
+    </div>
+    <div class="success-wrapper">
+        <div class="success-container">
+            <div class="mini-logo"> <i class="fas fa-chess"></i> Success</div>
+
+            <div class="greeting">Hi shafaath508,</div>
+            <div class="body">
+                Congratulations! Your PiChess account has been successfully created. An email containing your password
+                has been
+                dispatched to your inbox.
+                We recommend you to change your password immidiately due to <special>security Reasons.</special>
+                Wishing you an exhilarating journey through the world of chess!
+            </div>
+
+            <div class="greeting">
+                Team <i class="fas fa-chess"></i> PiChess
+            </div>
+
+            <div class="actions">
+                <div class="goback" onclick="window.location.href='/signup'">Go Back</div>
+                <div class="login" onclick="window.location.href='/login'">Login</div>
+            </div>
+
+        </div>
+    </div>
+    <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
+    <div class="warning-message"></div>
+    <div class="success-message"></div>
+
+    <div class="register-box-wrapper">
+
+        <div class="register-box">
+            <div class="mini-logo"> <i class="fas fa-chess"></i> SignUp</div>
+
+            <div class="register-details">
+                <div class="code">
+                    <input type="text" placeholder="Enter the six digit code sent to your email"
+                        class="register-input input">
+                </div>
+
+            </div>
+
+            <div class="register-options">
+
+                <div class="register disabled-register">Register</div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+    let allowed = false;
+    let otp;
+    let otpInput = document.getElementsByClassName('register-input')[0];
+    let registerButton = document.getElementsByClassName('register')[0];
+    otpInput.addEventListener('input', e => {
+        if (otpInput.value.length != 6) {
+            registerButton.classList.add('disabled-register')
+
+        }
+        else {
+
+            registerButton.classList.remove('disabled-register')
+        }
+    })
+
+    registerButton.addEventListener('click', e => {
+        otp = otpInput.value;
+        if (otp.length === 6) {
+            registerButton.classList.add('disabled-register');
+            loadingAnimation(registerButton)
+            verifyOTP(otp)
+                .then(data => {
+                    if (data.ok) {
+                        displaySuccessMessage(data.email)
+                    }
+                    else {
+                        displayFailedMessage(data.errMessage)
+                    }
+                    registerButton.innerHTML = 'Register'
+                    registerButton.classList.remove('disabled-register');
+                })
+                .catch(err => {
+                    warningMessage(err)
+                    registerButton.innerHTML = 'Register'
+                    registerButton.classList.remove('disabled-register');
+                });
+        }
+    })
+
+
+
+    async function verifyOTP(otp) {
+        let token = extractTokenFromURL(window.location.href);
+        let response = await sendPostRequest('/auth', { otp: otp, token: decodeURIComponent(token) })
+        return response;
+
+
+    }
+
+    function extractTokenFromURL(url) {
+        // Create a URL object from the provided URL string
+        const urlObject = new URL(url);
+
+        // Get the search parameters from the URL
+        const searchParams = urlObject.searchParams;
+
+        // Get the value of the 'token' parameter
+        const token = searchParams.get('token');
+
+        // Return the token value
+        return token;
+    }
+
+
+    async function sendPostRequest(url, postData) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any other headers if needed
+                },
+                body: JSON.stringify(postData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const responseData = await response.json();
+            return responseData;
+        } catch (error) {
+            console.error('Error during POST request:', error);
+            // You can handle the error here, e.g., display a message to the user
+            throw error; // Rethrow the error to propagate it
+        }
+    }
+
+
+    function warningMessage(warning) {
+        document.getElementsByClassName('warning-message')[0].innerHTML = warning
+        document.getElementsByClassName('warning-message')[0].style.display = 'flex'
+        setTimeout(() => {
+            document.getElementsByClassName('warning-message')[0].style.display = 'none'
+
+        }, 2000)
+    }
+
+    function successMessage(success) {
+        document.getElementsByClassName('success-message')[0].innerHTML = success
+        document.getElementsByClassName('success-message')[0].style.display = 'flex'
+        setTimeout(() => {
+            document.getElementsByClassName('success-message')[0].style.display = 'none'
+
+        }, 2000)
+    }
+
+    function displaySuccessMessage(email) {
+        document.getElementsByClassName('success-wrapper')[0].style.display = 'flex';
+        document.getElementsByClassName('register-box-wrapper')[0].style.display = 'none';
+        document.getElementsByClassName('failed-wrapper')[0].style.display = 'none';
+        document.getElementsByClassName('greeting')[1].innerHTML = 'Dear ' + email + ','
+    }
+    function displayFailedMessage(errMessage) {
+        document.getElementsByClassName('success-wrapper')[0].style.display = 'none';
+        document.getElementsByClassName('register-box-wrapper')[0].style.display = 'none';
+        document.getElementsByClassName('failed-wrapper')[0].style.display = 'flex';
+        document.getElementsByTagName('reasonFail')[0].innerHTML = errMessage
+
+    }
+
+    function loadingAnimation(element) {
+        element.innerHTML = "<i class='fas fa-spinner fa-spin'><i>"
+    }
+</script>
+
+
+</html>

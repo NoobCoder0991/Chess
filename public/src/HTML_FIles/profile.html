@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+</head>
+
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto+Slab:wght@100..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+    :root {
+        --body-color: #312e2b;
+        --primary: rgb(23, 23, 23);
+        --default-color: #bababa;
+        --accent: rgb(205, 40, 18);
+        --secondary: #5f8805;
+        --square-width: 3.5vw;
+        --square-width-mobile: 12vw;
+
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    body {
+        background-color: var(--body-color);
+        color: var(--default-color);
+        font-family: "Mukta", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        height: 100%;
+        overflow: scroll;
+        z-index: 0;
+
+    }
+
+    .main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 1vw;
+    }
+
+    .content {
+        display: flex;
+    }
+
+    .options {
+        background-color: #333;
+        width: 20vw;
+        margin: 0 1vw;
+        border-radius: 5px;
+        height: 100%;
+    }
+
+    .option {
+        padding: 0.5vw 1vw;
+        cursor: pointer;
+        background-color: #222;
+    }
+
+    .active-option {
+        background-color: var(--secondary);
+    }
+
+    .option-details {
+        background-color: #222;
+        padding: 1%;
+        min-width: 50vw;
+        border-radius: 5px;
+    }
+
+    .logo {
+        font-size: x-large;
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--secondary);
+
+
+    }
+
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .profile-details>div {
+        margin: 1vw 0;
+    }
+
+    .profile-image {
+        height: 100%;
+        border-radius: 5px;
+
+    }
+
+    .profile {
+        display: flex;
+        height: 22vh;
+    }
+
+    .profile>div {
+        margin-right: 1vw;
+    }
+
+    .slogan {
+        font-size: medium;
+        color: grey;
+    }
+
+    .rating {
+        font-size: large;
+        font-weight: bold;
+        color: goldenrod;
+    }
+
+    .user-title {
+        background-color: #444;
+        padding: 0 0.5vw;
+        color: orangered;
+    }
+
+    .chess-info-component {
+        display: flex;
+    }
+
+    .career {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .career>div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #333;
+        align-items: center;
+        width: 20%;
+    }
+
+    .profile-actions {
+        display: flex;
+        width: 100%;
+    }
+
+
+    .profile-action {
+        width: 100%;
+    }
+
+
+    .danger-zone {
+        background-image: linear-gradient(to right, rgba(255, 0, 0, 0.2), rgba(255, 0, 0, 0.1));
+        padding: 1vw;
+    }
+
+    .change-password {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .change-password>div {
+        width: 95%;
+        margin: 1% 0;
+    }
+
+    .about {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .about-textarea {
+        background-color: #222;
+        outline: none;
+        color: #fff;
+        width: 100%;
+
+        height: 20vh;
+        border-radius: 5px;
+        font-family: "Mukta", sans-serif;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    .big-button {
+        cursor: pointer;
+        border-radius: 3px;
+        padding: 0.5vw 0.5vw;
+        box-shadow: 3px 0px 0px rgba(93, 131, 5, 0.6), 3px 0px 0px rgba(120, 180, 15, 0.6);
+        background-image: linear-gradient(to bottom, #6d9e05, #5f8805);
+        color: white;
+
+    }
+
+    .big-button:hover {
+        background-image: linear-gradient(to bottom, #77aa09, #6d9c06);
+
+    }
+
+    .save-button {
+        align-self: center;
+        padding: 0.5vw 2vw;
+        /* width: 20%; */
+    }
+
+    .input {
+        background-color: #222;
+        outline: none;
+        border: 1px solid rgb(77, 73, 73);
+        padding: 1%;
+        font-size: 15px;
+        width: 98%;
+        border-radius: 3px;
+        color: var(--default-color);
+    }
+
+    .input:focus {
+        box-shadow: 0px 0px 3px var(--secondary);
+    }
+
+    .submit-button-input {
+        border: none;
+    }
+
+    .danger-zone-actions {
+        display: flex;
+    }
+
+    .danger-action {
+        background-color: var(--accent);
+        padding: 0.5%;
+        border-radius: 5px;
+        margin: 0 1%;
+        cursor: pointer;
+    }
+
+    .advanced-footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer-links {
+        color: var(--default-color);
+        font-size: small;
+        width: 100%;
+        text-align: center;
+        /* text-wrap: nowrap; */
+    }
+
+    .footer-link {
+        color: grey;
+        margin: 0 0.5%;
+    }
+
+    .footer-link:hover {
+        color: white;
+    }
+
+    .footer-options {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: grey;
+        font-size: xx-large;
+        width: 100vw;
+    }
+
+    .footer-options>div {
+        margin-right: 2vw;
+    }
+
+    .footer-option {
+        color: grey;
+        text-wrap: nowrap;
+        margin: 0 0.5vw;
+    }
+
+    .footer-option:hover {
+        color: white;
+    }
+
+    /* lower screen widths */
+    @media screen and (max-width:1000px) {
+
+
+        .options {
+            display: none;
+        }
+
+        .option-details {
+            width: 95vw;
+        }
+
+        .mobile-options-wrapper {
+            display: flex;
+        }
+
+        .mobile-options {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            background-color: #333;
+            width: 50%;
+            /* margin: 0 1vw; */
+            border-radius: 5px;
+            right: 50%;
+            display: none;
+            animation: appear 0.5s;
+        }
+
+        @keyframes appear {
+            0% {
+                right: 100%;
+            }
+
+            100% {
+                right: 50%;
+            }
+
+        }
+
+        .mobile-option {
+            padding: 0.5vw 1vw;
+            cursor: pointer;
+            background-color: #222;
+        }
+
+        .mobile-options-appear {
+            /* position: absolute; */
+        }
+
+        .mobile-options-appear {
+            font-size: x-large;
+            cursor: pointer;
+        }
+
+        .mobile-active-option {
+            background-color: var(--secondary);
+        }
+    }
+
+    @media screen and (max-width:800px) {
+        .option-details {
+            width: 100%;
+        }
+
+    }
+</style>
+
+<body>
+
+    <div class="logo"><i class="fas fa-chess"></i>PiChess</div>
+
+    <div class="main">
+        <div class="title">
+            <h1><i class="fas fa-cog"></i> Settings</h1>
+        </div>
+
+        <div class="mobile-options-wrapper">
+            <div class="mobile-options">
+                <div class="mobile-option mobile-profile-option mobile-active-option">Profile</div>
+                <div class="mobile-option mobile-board-settings">Board Settings</div>
+
+            </div>
+            <div class="mobile-options-appear" onclick="displayMobileOptions()"><i class="fas fa-bars"></i></div>
+
+        </div>
+        <div class="content">
+
+
+            <div class="options">
+                <div class="option profile-option active-option">Profile</div>
+                <div class="option board-settings">Board Settings</div>
+
+            </div>
+            <div class="option-details">
+                <div class="profile-details">
+                    <div class="profile">
+                        <div class="profile-photo">
+                            <img src="../../assets/image-files/default_profile.gif" alt="" class="profile-image">
+
+                        </div>
+                        <div class="user-info">
+                            <span style="display: flex;">
+                                <h2 class="user-title">GM</h2>
+                                &nbsp;
+                                <h2 class="username">
+                                    Hikaru Nakamura
+                                </h2>
+                            </span>
+                            <div class="rating">3200</div>
+                            <div class="slogan">I am the fucking boss!</div>
+                        </div>
+                    </div>
+
+                    <div class="chess-info">
+                        <div class="chess-info-component">
+                            <div class="label">Email: &nbsp;</div>
+                            <div class="email">shafaath508@gmail.com</div>
+                        </div>
+                        <div class="chess-info-component">
+                            <div class="label">Joined: &nbsp;</div>
+                            <div class="joined">1 April 2024</div>
+                        </div>
+                    </div>
+
+                    <div class="career">
+                        <div class="total-games">
+                            <div>Total</div>
+                            <div class="count">25</div>
+                        </div>
+                        <div class="games-won">
+                            <div>Won</div>
+                            <div class="count">18</div>
+
+
+                        </div>
+                        <div class="games-lost">
+                            <div>Lost</div>
+                            <div class="count">2</div>
+                        </div>
+                        <div class="games-draw">
+                            <div>Draw</div>
+                            <div class="count">5</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <div class="profile-action change-password">
+                            <div>
+                                <h2>Change Password
+                                </h2>
+                            </div>
+                            <form action="/change-password" method="post"></form>
+                            <div class="existing-password">
+                                <input type="text" class="input" placeholder="Existing password">
+                            </div>
+                            <div class="new-password">
+                                <input type="text" class="input" placeholder="New password">
+                            </div>
+                            <div class="confirm-new-password">
+                                <input type="text" class="input" placeholder="Confirm New password">
+                            </div>
+                            <div>
+                                <input class="submit-button-input big-button" type="submit" value="Change Password">
+                            </div>
+                        </div>
+                        <!-- <div class="profile-action delete-account">Delete Account</div> -->
+                    </div>
+
+                    <div class="about">
+                        <div class="about-title">
+                            <h2>About</h2>
+                        </div>
+                        <div class="about-content">
+                            <textarea class="about-textarea" name="" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="save-button big-button">Save</div>
+                    </div>
+
+                    <div class="danger-zone">
+                        <div>
+                            <h2>Danger Zone</h2>
+                        </div>
+                        <div class="danger-zone-actions">
+
+                            <div class="danger-action delete-account">Delete Account</div>
+                            <div class="danger-action disable-account">Disable Account</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="advanced-footer">
+        <div class="footer-links">
+            <a href="" class="footer-link">Help</a> |
+            <a href="" class="footer-link">Chess Terms</a> |
+            <a href="" class="footer-link">About</a> |
+            <a href="" class="footer-link">Students</a> |
+            <a href="" class="footer-link">Jobs</a> |
+            <a href="" class="footer-link">Developers</a> |
+            <a href="" class="footer-link">User Agreement</a> |
+            <a href="" class="footer-link">Privace</a> |
+            <a href="" class="footer-link">Fair Play</a> |
+            <a href="" class="footer-link">Partners</a> |
+            <a href="" class="footer-link">PiChess.org &copy; 2023-2024</a>
+        </div>
+
+        <div class="footer-options">
+            <div class="footer-download-options">
+                <a href="" class="footer-download-option footer-option"><i class="fab fa-apple"></i>
+                </a>
+                <a href="" class="footer-download-option footer-option"><i class="fab fa-android"></i></a>
+
+            </div>
+            <div class="footer-contact-options">
+                <a href=""><i class="footer-option fab fa-facebook"></i></a>
+                <a href=""><i class="footer-option fab fa-twitter"></i></a>
+                <a href=""><i class="footer-option fab fa-instagram"></i></a>
+                <a href=""><i class="footer-option fab fa-youtube"></i></a>
+                <a href=""><i class="footer-option fab fa-github"></i></a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    function displayMobileOptions() {
+        document.getElementsByClassName('mobile-options')[0].style.display = 'flex'
+    }
+</script>
+
+</html>

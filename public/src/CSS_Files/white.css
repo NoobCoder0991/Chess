@@ -1,0 +1,1335 @@
+@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@300&family=Nunito+Sans:opsz,wght@6..12,300&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Oxygen&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto+Slab:wght@100..900&display=swap');
+
+:root {
+    --body-color: #312e2b;
+    --primary: rgb(23, 23, 23);
+    --default-color: #bababa;
+    --accent: rgb(205, 40, 18);
+    --secondary: #5f8805;
+    --puzzle-board-width: 32vw;
+    --puzzle-board-width-mobile: 96vw;
+    --square-width: 4vw;
+    --square-width-mobile: 12vw;
+    --active-color: #2c3e50;
+    --highlight-circle-width: 1.2vw;
+    --highlight-circle-width-mobile: 3.2vw;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+
+    font-family: "Exo 2", sans-serif;
+    font-family: "Roboto Slab", serif;
+    font-optical-sizing: auto;
+
+    color: #bababa;
+    background-color: var(--body-color);
+    background-color: var(--body-color);
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    padding: 1vw;
+}
+
+.logo {
+    font-size: x-large;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--secondary);
+    font-family: "Exo 2", sans-serif;
+}
+
+.info {
+    padding: 2vw;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.header>div {
+    margin: 0 1vw;
+}
+
+ul {
+    list-style: none;
+    cursor: pointer;
+}
+
+ul li {
+    display: inline-block;
+    margin: 0 1vw;
+}
+
+ul li:hover {
+    background-color: #333;
+}
+
+.play-dropdown-cover {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: #333;
+    z-index: 1;
+    display: none;
+    border-left: 3px solid var(--secondary);
+}
+
+.dropdown-option {
+    margin-bottom: 1vh;
+    padding: 0.3vw;
+}
+
+.dropdown-option:hover {
+    background-color: var(--accent);
+}
+
+.header-mobile {
+    display: none;
+}
+
+#chessBoard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: var(--chessboard-width);
+    width: var(--chessboard-width);
+}
+
+.blankImage {
+    opacity: 0;
+}
+
+.options {
+    background-color: darkcyan;
+    cursor: pointer;
+}
+
+.rank {
+    display: flex;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--square-width);
+    height: var(--square-width);
+}
+
+.piece {
+    position: absolute;
+    width: var(--square-width);
+    z-index: 1;
+}
+
+.smooth-piece {
+    transition: 0.3s;
+}
+
+.action {
+    display: flex;
+    flex-direction: column;
+    padding: 1vh 2vw;
+    transition: 0.3s;
+    cursor: pointer;
+    font-size: large;
+}
+
+.enabled:hover {
+    background-color: var(--active-color);
+    color: white;
+}
+
+.active-action {
+    background-color: rgb(201, 75, 16);
+    border-radius: 5px;
+}
+
+.active-action:hover {
+    background-color: rgb(201, 75, 16);
+}
+
+.disabled {
+    color: rgb(83, 81, 81);
+    cursor: default;
+    font-weight: normal;
+    pointer-events: none;
+}
+
+.rematch {
+    width: 100%;
+    font-size: xx-large;
+    display: flex;
+    align-items: center;
+    background-color: rgb(41, 40, 40);
+    display: none;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    background-color: rgb(48, 48, 45);
+}
+
+/* .bottom-actions {
+    display: flex;
+    justify-content: space-around;
+} */
+
+.bottom-actions-component-wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    background-color: rgb(34, 34, 32);
+}
+
+.bottom-action {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+    padding: 1% 5%;
+    margin-bottom: 1%;
+}
+
+action:hover {
+    background-color: var(--secondary);
+}
+
+.text {
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3vh 0;
+}
+
+.second-board {
+    background-color: #262421;
+    display: flex;
+    flex-direction: column;
+    margin-left: 1vw;
+    align-self: center;
+    height: 100%;
+}
+
+.second-board-visible {
+    display: flex;
+}
+
+.analysis-board {
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    scroll-behavior: smooth;
+    width: 30vw;
+    height: 10vw;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.moveDiv {
+    display: flex;
+}
+
+.move {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 1% 0;
+}
+
+.move:hover {
+    background-color: var(--secondary);
+
+}
+
+.number-div {
+    width: 20%;
+    background-color: rgb(48, 45, 45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-name {
+    padding: 1vh 0;
+    background: #161512 linear-gradient(to bottom, hsl(37, 12%, 16%), hsl(37, 10%, 8%) 116px) no-repeat;
+    display: flex;
+}
+
+.player-name-mobile {
+    background: #161512 linear-gradient(to bottom, hsl(37, 12%, 16%), hsl(37, 10%, 8%) 116px) no-repeat;
+    display: none;
+}
+
+.recapeDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-color: rgb(41, 40, 40);
+}
+
+.recapeButton {
+    padding: 1vh 0.1vw;
+    cursor: pointer;
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+.recapeButton:hover {
+    background-color: rgba(0, 0, 0, 0.452);
+    background-color: var(--active-color);
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: #333;
+}
+
+.nav-element {
+    font-size: large;
+    margin-right: 2vw;
+    margin-left: 1vw;
+    cursor: pointer;
+}
+
+.nav-element:hover {
+    color: white;
+}
+
+.logo {
+    font-size: x-large;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--secondary);
+    font-family: "Exo 2", sans-serif;
+}
+
+.highlight-circle {
+    height: var(--highlight-circle-width);
+    width: var(--highlight-circle-width);
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+    background-color: #2c3e50;
+    background-color: rgb(0 0 0 / 60%);
+    background-color: rgb(55 49 49);
+    display: none;
+    z-index: 2;
+}
+
+.show-result {
+    position: absolute;
+    background-color: #262421;
+    min-width: 30vw;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.1vw;
+    box-shadow: 0px 0px 5px white;
+}
+
+.show-result div {
+    margin-top: 3vh;
+}
+
+.text-div {
+    font-weight: bold;
+    font-size: large;
+}
+
+.cross-button {
+    background-color: rgb(87, 82, 82);
+    padding: 1vh 10%;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 0;
+    margin-top: auto;
+    margin-right: 3%;
+    margin-left: auto;
+}
+
+.analysis-board-mobile {
+    display: none;
+}
+
+.game-details {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #222;
+    box-shadow: 1px 1px 3px #555;
+    border-radius: 1%;
+    z-index: 1;
+    min-width: 35vw;
+    display: none;
+}
+
+.game-details>div {
+    margin-bottom: 3%;
+}
+
+.levels {
+    display: flex;
+    width: 80%;
+    box-shadow: 1px 1px 0px #555;
+}
+
+.level {
+    width: 25%;
+    height: 7vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0vw;
+    cursor: pointer;
+    background-color: var(--body-color);
+    border-right: 1px solid rgb(100, 95, 95);
+    background-color: #333;
+}
+
+.active-level {
+    background-color: var(--active-color);
+}
+
+.level:hover {
+    background-color: #444;
+}
+
+.active-level:hover {
+    background-color: var(--active-color);
+}
+
+.button {
+    background-color: var(--active-color);
+    height: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5vh 10%;
+    cursor: pointer;
+    padding: 0 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button:hover {
+    background-color: var(--active-color);
+}
+
+.cancel-computer-button {
+    background-color: rgb(49, 46, 46);
+}
+
+.active-move {
+    background-color: var(--active-color);
+    background-color: var(--secondary);
+}
+
+.sides {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.side {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    cursor: pointer;
+    margin: 1vh 2vw;
+    padding: 1vh 1vw;
+    width: 15%;
+    background-color: var(--body-color);
+    background-color: #333;
+}
+
+.side:hover {
+    background-color: var(--active-color);
+}
+
+.active-side {
+    background-color: var(--active-color);
+}
+
+.inside-analysis-board-title {
+    position: absolute;
+    top: 50%;
+
+    font-size: xx-large;
+
+    align-self: center;
+    justify-self: center;
+}
+
+.save-game {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #302d2d;
+
+    padding: 1.5%;
+    display: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.save-game:hover {
+    background-color: var(--secondary);
+
+}
+
+.light-square {
+    background-color: white;
+}
+
+.dark-square {
+    background-color: rgb(136, 100, 51);
+    background-color: rgb(184, 139, 74);
+    background-color: rgb(184, 139, 74);
+    background-color: #5f8805;
+    background-color: #83a735;
+    background-color: #6b872e;
+    background-color: #7f9b43;
+}
+
+.check-square {
+    background-color: orangered;
+}
+
+.start-square {
+    background-color: grey;
+    background-color: rgb(156, 126, 50);
+    background-color: rgb(255, 255, 1);
+    opacity: 0.5;
+}
+
+.target-square {
+    background-color: dimgrey;
+    background-color: rgb(156, 126, 50);
+    background-color: rgb(255, 255, 1);
+    opacity: 0.5;
+}
+
+.colored-square {
+    background-color: rgb(160, 120, 10);
+    background-color: orange;
+}
+
+.odd-colored-square {
+    background-color: rgb(160, 120, 10);
+    background-color: rgb(98, 165, 220);
+}
+
+.even-colored-square {
+    background-color: rgb(160, 110, 17);
+    background-color: rgb(88, 143, 188);
+}
+
+.click-square {
+    background-color: rgb(156, 120, 50);
+}
+
+.legal-square {
+    background-color: rgba(220, 163, 19, 0.3);
+}
+
+.winner-symbol {
+    position: absolute;
+    color: gold;
+    font-weight: bold;
+    font-size: large;
+}
+
+.loser-symbol {
+    position: absolute;
+    color: black;
+    font-size: large;
+    font-weight: bold;
+}
+
+.gameover-box-wrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.wrapper-close {
+    color: var(--accent);
+    color: white;
+    font-weight: bold;
+    font-size: xx-large;
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+.gameover-box {
+    padding: 0.5%;
+    display: flex;
+    flex-direction: column;
+    background-color: #222;
+    justify-content: center;
+    align-items: center;
+    width: 30vw;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px grey;
+}
+
+.result-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+}
+
+.winner-name {
+    color: gold;
+}
+
+.win-reason {
+    font-size: small;
+}
+
+.gameover-box>div {
+    margin-bottom: 8%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.player-icons {
+    display: flex;
+    height: 15vh;
+    margin-bottom: 10vh;
+}
+
+.player-icons>div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+
+    align-items: center;
+    margin: 0 1%;
+}
+
+.player-icon {
+    font-size: xx-large;
+}
+
+.profile-image {
+    height: 100%;
+    object-fit: cover;
+}
+
+.chess-side {
+    border: 3px solid grey;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border-radius: 3px;
+    height: 100%;
+    margin: 0 5%;
+    cursor: pointer;
+    transition: 0.5s;
+    min-width: 60%;
+    border: 5px solid grey;
+}
+
+.winner-side .change {
+    color: dodgerblue;
+    color: var(--secondary);
+}
+
+.loser-side .change {
+    color: var(--accent);
+}
+
+.rating-details {
+    display: flex;
+}
+
+.white-side>div,
+.black-side>div {
+    margin-bottom: 1%;
+}
+
+.change {
+    font-size: large;
+}
+
+.chess-side>img {
+    margin-bottom: 1%;
+}
+
+.winner-side>.chess-side {
+    border: 5px solid dodgerblue;
+    border: 5px solid var(--secondary);
+    animation: celebrate 1s;
+}
+
+.loser-side>.chess-side {
+    border: 5px solid var(--accent);
+    border: 5px solid orangered;
+}
+
+.name {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: dodgerblue;
+}
+
+.analysis-options {
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+
+.analysis-options>div {
+    padding: 2%;
+    cursor: pointer;
+    text-align: center;
+    margin: 0 1%;
+    width: 70%;
+    border-radius: 2px;
+}
+
+.analyse {
+    background-color: var(--secondary);
+}
+
+.close {
+    background-color: rgb(63, 61, 61);
+}
+
+.action:hover {
+    background-color: #2c3e50;
+    background-color: var(--secondary);
+}
+
+.absolute-image {
+    position: absolute;
+    opacity: 0.01;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    object-fit: cover;
+    display: none;
+}
+
+.second-board-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5vw 0vw;
+    background-color: var(--primary);
+}
+
+.player-profile {
+    display: flex;
+    background-color: #383232;
+    background-color: #444;
+    background-color: rgba(0, 0, 0, 0.15);
+
+    align-items: center;
+    width: 70%;
+    padding: 1.5%;
+}
+
+.player-profile>div {
+    margin-right: 1%;
+}
+
+.topPlayer,
+.bottomPlayer {
+    display: flex;
+    padding: 0.5% 0;
+}
+
+.profile-icon {
+    font-size: large;
+}
+
+.timer {
+    display: flex;
+    font-size: x-large;
+    width: 30%;
+    padding: 1%;
+    font-weight: bold;
+    text-rendering: optimizeLegibility;
+}
+
+.timer>div {
+    margin-right: 1%;
+}
+
+.black-timer {
+    background-color: #222;
+    color: white;
+}
+
+.white-timer {
+    background-color: white;
+    color: #222;
+}
+
+.disabled-white-timer {
+    color: rgb(88, 84, 84);
+}
+
+.disabled-black-timer {
+    color: rgb(98, 92, 92);
+}
+
+.low-timer {
+    color: orangered;
+}
+
+.profile-name {
+    color: white;
+}
+
+.profile-rating {
+    font-weight: bold;
+    margin-left: 2%;
+}
+
+.profile-title {
+    color: orangered;
+    font-weight: bold;
+    font-size: large;
+}
+
+.opponent-selection-board {
+    background-color: #222;
+    display: flex;
+    flex-direction: column;
+    padding: 1% 2%;
+    border-radius: 5px;
+    width: 30vw;
+    margin-left: 1vw;
+}
+
+.opponent-title {
+    text-align: center;
+}
+
+.opponent-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.opponent-profile-icon {
+    border: 3px solid var(--secondary);
+    font-size: xx-large;
+    padding: 1vw;
+    border-radius: 8px;
+}
+
+.opponent-profile-name {
+    font-weight: bold;
+}
+
+.opponent-profile-description {
+    color: grey;
+    text-align: center;
+    margin: 2vh 0;
+    padding: 5% 0;
+}
+
+.opponent-selection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+}
+
+.opponent {
+    padding: 1vw 2vw;
+    cursor: pointer;
+    margin: 1%;
+    background-color: #333;
+}
+
+.active-opponent {
+    background-color: var(--accent);
+}
+
+.opponent-selection-button {
+    background-color: var(--secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    padding: 1vw 27%;
+    margin-top: 5%;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.board-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: none;
+}
+
+.reconnecting {
+    color: orangered;
+    display: none;
+}
+
+.reconnected {
+    color: deepskyblue;
+    display: none;
+}
+
+.bottom-actions {
+    display: flex;
+    justify-content: space-around;
+    background-color: #222;
+}
+
+.bottom-action {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+    padding: 1% 5%;
+    margin-bottom: 1%;
+}
+
+.new-game {
+    display: none;
+}
+
+action:hover {
+    background-color: #2c3e50;
+}
+
+.text {
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3vh 0;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.warning-wrapper {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.warning-container {
+    padding: 1%;
+    display: flex;
+    flex-direction: column;
+    background-color: #222;
+    justify-content: center;
+
+    width: 50vw;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px grey;
+}
+
+.greeting {
+    color: #5f8805;
+    font-weight: bold;
+    font-size: large;
+    margin: 3% 0;
+}
+
+.body {
+    line-height: 1.5;
+}
+
+.mini-logo {
+    padding: 1%;
+    font-size: xx-large;
+    text-align: center;
+    width: 100%;
+    background-color: #333;
+}
+
+special {
+    color: rgb(206, 25, 25);
+}
+
+.user-understand-button {
+    display: flex;
+    align-self: center;
+}
+
+.user-understand-button>div {
+    margin: 0 1vw;
+    padding: 0.5vw 1vw;
+    text-wrap: nowrap;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.goback {
+    background-color: var(--accent);
+}
+
+.cheater-username {
+    font-weight: bold;
+}
+
+.opponent-draw {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    background-color: var(--secondary);
+    background-color: #444;
+
+    animation: appear 1s;
+    right: 0.5vw;
+    padding: 1%;
+    display: none;
+    top: 1vh;
+
+
+}
+
+.draw-bar {
+    background-color: var(--secondary);
+    width: 0%;
+    height: 1vh;
+
+    animation: 5s decrease;
+
+}
+
+@keyframes decrease {
+    0% {
+        width: 100%;
+    }
+
+    50% {
+        /* width: 50%; */
+        background-color: orange;
+    }
+
+    80% {
+        /* width: 20%; */
+        background-color: var(--accent);
+    }
+
+    100% {
+        width: 0%;
+    }
+
+}
+
+
+
+.draw-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+
+}
+
+
+.draw-details>div {
+    margin-right: 3vw;
+    text-wrap: nowrap;
+}
+
+.accept {
+    cursor: pointer;
+    background-color: var(--secondary);
+    padding: 0.5vw 1vw;
+}
+
+.reject {
+    cursor: pointer;
+    background-color: var(--accent);
+    padding: 0.5vw 1vw;
+}
+
+@media screen and (max-width: 800px) {
+    .gameover-box {
+        min-width: 90vw;
+    }
+
+    body {
+        flex-direction: column;
+    }
+
+    #chessBoard {
+        width: var(--chessboard-width-mobile);
+        height: var(--chessboard-width-mobile);
+    }
+
+    .opponent-selection-board {
+        padding: 1% 2%;
+        border-radius: 5px;
+        width: 96vw;
+        margin-left: 0;
+        align-self: center;
+        justify-self: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .opponent {
+        padding: 5vw 5vw;
+        cursor: pointer;
+        margin: 1%;
+        background-color: #333;
+    }
+
+    .active-opponent {
+        background-color: var(--accent);
+    }
+
+    .header {
+        display: none;
+    }
+
+    .header-mobile {
+        display: flex;
+        justify-content: space-around;
+        /* align-items: center; */
+    }
+
+    .header-mobile>div {
+        margin-right: 3vw;
+        font-size: x-large;
+        padding: 1vw;
+    }
+
+    .info {
+        padding: 10vh 0;
+    }
+
+    .info>div {
+        margin-bottom: 5vh;
+    }
+
+    .main {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .square {
+        width: var(--square-width-mobile);
+        height: var(--square-width-mobile);
+    }
+
+    .piece {
+        width: var(--square-width-mobile);
+    }
+
+    .second-board {
+        background-color: var(--body-color);
+        width: 100%;
+        display: none;
+    }
+
+    .second-board-title {
+        display: none;
+    }
+
+    .analysis-board {
+        width: 100%;
+    }
+
+    .resDiv {
+        width: 90vw;
+        top: 20vh;
+        left: 5vw;
+    }
+
+    .recapeDiv {
+        height: 7vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(54, 53, 49);
+    }
+
+    .recapeButton {
+        width: 25%;
+    }
+
+    .actions {
+        height: 8vh;
+        background-color: var(--body-color);
+    }
+
+    .rematch {
+        background-color: var(--body-color);
+        background-color: rgb(54, 53, 49);
+    }
+
+    .player-name {
+        display: none;
+    }
+
+    .player-name-mobile {
+        display: flex;
+        padding: 1vh 0;
+        font-size: 18px;
+        box-shadow: 1px 1px 0px black;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    .show-result {
+        min-width: 90vw;
+        top: 30vh;
+    }
+
+    .other-details {
+        display: inline-block;
+        margin-right: 5%;
+        margin-left: auto;
+        font-size: large;
+        cursor: pointer;
+    }
+
+    .other-details:hover {
+        color: darkcyan;
+    }
+
+    .analysis-board-mobile {
+        display: flex;
+        padding: 1%;
+        width: 100vw;
+        align-items: center;
+        justify-content: flex-end;
+        overflow: scroll;
+        scroll-behavior: smooth;
+        font-size: large;
+        margin: 2vh 0;
+    }
+
+    .moveDiv {
+        margin-right: 4vw;
+        background-color: var(--body-color);
+        white-space: nowrap;
+        background-color: #333;
+    }
+
+    .move {
+        margin: 1vw;
+        width: 100%;
+        transition: 0s;
+    }
+
+    .active-move {
+        background-color: grey;
+    }
+
+    .number-div {
+        color: darkcyan;
+        background-color: #333;
+    }
+
+    .game-details {
+        width: 98vw;
+    }
+
+    .levels {
+        width: 95%;
+    }
+
+    .highlight-circle {
+        width: var(--highlight-circle-width-mobile);
+        height: var(--highlight-circle-width-mobile);
+    }
+}

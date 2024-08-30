@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Play with computer</title>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+</head>
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Heebo:wght@300&family=Nunito+Sans:opsz,wght@6..12,300&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Oxygen&display=swap");
+
+    @import url("https://fonts.googleapis.com/css2?family=Exo+2&display=swap");
+
+    :root {
+        --body-color: #222;
+        --primary: rgb(23, 23, 23);
+        --default-color: #bababa;
+        --accent: rgb(205, 40, 18);
+        --secondary: #5f8805;
+        --puzzle-board-width: 32vw;
+        --puzzle-board-width-mobile: 96vw;
+        --square-width: 4vw;
+        --square-width-mobile: 12vw;
+        --active-color: #2c3e50;
+        --highlight-circle-width: 1.2vw;
+        --highlight-circle-width-mobile: 3.8vw;
+        --piece-width: 4vw;
+        --piece-width-mobile: 12vw;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        font-family: "Exo 2", sans-serif;
+        color: #bababa;
+        background-color: var(--body-color);
+        background-color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .main {
+        display: flex;
+        justify-content: center;
+        padding: 1vw;
+    }
+
+    .logo {
+        font-size: x-large;
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--secondary);
+        font-family: "Exo 2", sans-serif;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+    }
+
+    .header>div {
+        margin: 0 1vw;
+    }
+
+    .header-mobile {
+        display: none;
+    }
+
+    #chessBoard {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: var(--chessboard-width);
+        width: var(--chessboard-width);
+    }
+
+    .rank {
+        display: flex;
+    }
+
+    .square {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: var(--square-width);
+        height: var(--square-width);
+    }
+
+    .piece {
+        position: absolute;
+        width: var(--piece-width);
+        z-index: 1;
+    }
+
+    .smooth-piece {
+        transition: 0.3s;
+    }
+
+    .action {
+        display: flex;
+        flex-direction: column;
+        padding: 1vh 2vw;
+        transition: 0.3s;
+        cursor: pointer;
+        font-size: large;
+    }
+
+    .actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        background-color: rgb(48, 48, 45);
+    }
+
+    action:hover {
+        background-color: #2c3e50;
+    }
+
+    .text {
+        font-weight: bolder;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 3vh 0;
+    }
+
+    .second-board {
+        background-color: #262421;
+        display: flex;
+        flex-direction: column;
+        margin-left: 1vw;
+        align-self: center;
+        height: 100%;
+    }
+
+    .analysis-board {
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
+        scroll-behavior: smooth;
+        width: 30vw;
+        height: 10vw;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .moveDiv {
+        display: flex;
+    }
+
+    .move {
+        width: 40%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 1% 0;
+        transition: 0.2s;
+    }
+
+    .move:hover {
+        background-color: cadetblue;
+    }
+
+    .number-div {
+        width: 20%;
+        background-color: rgb(48, 45, 45);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .recapeButton:hover {
+        background-color: rgba(0, 0, 0, 0.452);
+        background-color: var(--active-color);
+    }
+
+    .disabled-recapeButton {
+        color: dimgrey;
+    }
+
+    .nav-element:hover {
+        color: white;
+    }
+
+    .logo {
+        font-size: x-large;
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--secondary);
+        font-family: "Exo 2", sans-serif;
+    }
+
+    .analysis-board-mobile {
+        display: none;
+    }
+
+    .light-square {
+        background-color: white;
+    }
+
+    .dark-square {
+        background-color: rgb(136, 100, 51);
+        background-color: rgb(184, 139, 74);
+        background-color: rgb(184, 139, 74);
+        background-color: #5f8805;
+        background-color: #83a735;
+        background-color: #6b872e;
+    }
+
+    .check-square {
+        background-color: orangered;
+    }
+
+    .white-occupied-square {
+        background-color: orangered;
+    }
+
+    .black-occupied-square {
+        background-color: green;
+    }
+
+    .start-square {
+        background-color: grey;
+        background-color: rgb(156, 126, 50);
+        background-color: rgb(173, 135, 38);
+        background-color: rgb(255, 255, 1);
+        opacity: 0.5;
+    }
+
+    .target-square {
+        background-color: dimgrey;
+        background-color: rgb(156, 126, 50);
+        background-color: rgb(141, 108, 26);
+        background-color: rgb(255, 255, 1);
+        opacity: 0.5;
+    }
+
+    .colored-square {
+        background-color: rgb(160, 120, 10);
+        background-color: orange;
+    }
+
+    .odd-colored-square {
+        background-color: rgb(160, 120, 10);
+        background-color: rgb(98, 165, 220);
+    }
+
+    .even-colored-square {
+        background-color: rgb(160, 110, 17);
+        background-color: rgb(88, 143, 188);
+    }
+
+    .click-square {
+        background-color: rgb(156, 120, 50);
+    }
+
+    .legal-square {
+        background-color: rgba(220, 163, 19, 0.3);
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .action:hover {
+        background-color: #2c3e50;
+    }
+
+    .absolute-image {
+        position: absolute;
+        opacity: 0.01;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        object-fit: cover;
+    }
+
+    .second-board-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5vw 0vw;
+        background-color: var(--primary);
+    }
+
+    .player-profile {
+        display: flex;
+        background-color: #333;
+        background-color: #222;
+        align-items: center;
+    }
+
+    .player-profile>div {
+        margin-right: 1%;
+    }
+
+    .profile-icon {
+        font-size: large;
+        padding: 2%;
+    }
+
+    .light-coordinate {
+        position: absolute;
+        color: white;
+        z-index: 10;
+    }
+
+    .dark-coordinate {
+        color: #6b872e;
+        position: absolute;
+        z-index: 10;
+    }
+
+    @media screen and (max-width: 800px) {
+        body {
+            flex-direction: column;
+        }
+
+        #chessBoard {
+            width: var(--chessboard-width-mobile);
+            height: var(--chessboard-width-mobile);
+        }
+
+        .header {
+            display: none;
+        }
+
+        .header-mobile {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .header-mobile>div {
+            margin-right: 3vw;
+            font-size: x-large;
+            padding: 1vw;
+        }
+
+        .main {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .square {
+            width: var(--square-width-mobile);
+            height: var(--square-width-mobile);
+        }
+
+        .piece {
+            width: var(--piece-width-mobile);
+        }
+
+        .second-board {
+            background-color: #333;
+            width: 100%;
+        }
+
+        .second-board-title {
+            display: none;
+        }
+
+        .analysis-board {
+            width: 100%;
+            display: none;
+        }
+
+        .player-name {
+            display: none;
+        }
+
+        .player-name-mobile {
+            display: flex;
+            padding: 1vh 0;
+            font-size: 18px;
+            box-shadow: 1px 1px 0px black;
+        }
+
+        .navbar {
+            display: none;
+        }
+
+        .other-details:hover {
+            color: darkcyan;
+        }
+
+        .analysis-board-mobile {
+            display: flex;
+            padding: 1vw;
+            height: 10vh;
+            width: 100vw;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: scroll;
+            scroll-behavior: smooth;
+        }
+
+        .moveDiv {
+            margin-right: 4vw;
+            background-color: var(--body-color);
+            white-space: nowrap;
+            background-color: #333;
+        }
+
+        .move {
+            margin: 1vw;
+            width: 100%;
+            transition: 0s;
+        }
+
+        .active-move {
+            background-color: grey;
+        }
+
+        .number-div {
+            color: darkcyan;
+            background-color: #333;
+        }
+    }
+</style>
+
+<body>
+    <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="" />
+
+    <div class="header-mobile">
+        <div class="nav-options-mobile">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo">
+            <i class="fas fa-chess"></i>
+            PiChess.org
+            <!-- <img src="/public/piece-images-2/PiChess.png" alt="" class="logo-image"> -->
+        </div>
+        <div class="search-bar-mobile">
+            <i class="fas fa-search search-icon-mobile"></i>
+        </div>
+        <div class="user-info-mobile">
+            <i class="fas fa-user-plus"></i>
+        </div>
+    </div>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-chess"></i>
+            PiChess.org
+        </div>
+    </div>
+    <div style="width: 100%; overflow-x: scroll">
+        <div class="analysis-board-mobile"></div>
+    </div>
+
+    <div class="main">
+        <div class="board">
+            <div class="player-profile" id="opponent-profile">
+                <div class="profile-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="profile-name"></div>
+                <div class="profile-rating"></div>
+            </div>
+            <div id="chessBoard">
+                <div class="board-wrapper"></div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+            </div>
+            <div class="player-profile" id="my-profile">
+                <div class="profile-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-name"></div>
+                <div class="profile-rating"></div>
+            </div>
+        </div>
+
+        <div class="second-board">
+            <div class="second-board-title">
+                <i class="fas fa-chess"></i> &nbsp;PiChess Game Analysis
+            </div>
+
+            <div class="actions">
+                <div class="analysis-button action">
+                    <div class="icon"><i class="fas fa-chess-board"></i></div>
+                </div>
+
+                <div class="start-move action disabled-recapeButton">
+                    <div class="icon"><i class="fas fa-fast-backward"></i></div>
+                </div>
+                <div class="previous-move action disabled-recapeButton">
+                    <div class="icon"><i class="fas fa-backward"></i></div>
+                </div>
+                <div class="next-move action disabled-recapeButton">
+                    <div class="icon"><i class="fas fa-forward"></i></div>
+                </div>
+                <div class="end-move action disabled-recapeButton">
+                    <div class="icon"><i class="fas fa-fast-forward"></i></div>
+                </div>
+            </div>
+
+            <div class="analysis-board original"></div>
+        </div>
+    </div>
+</body>
+
+<script>
+    let moveSound = new Audio("../../assets/sound-files/lichess-move.ogg");
+    let captureSound = new Audio(
+        "../../assets/sound-files/lichess-capture.ogg"
+    );
+    let background = new Audio("../../assets/sound-files/background.mp3");
+    let castleSound = new Audio("../../assets/sound-files/castle.mp3");
+    let promotionSound = new Audio("../../assets/sound-files/promote.mp3");
+    let checkSound = new Audio("../../assets/sound-files/move-check.wav");
+    let gameEnd = new Audio("../../assets/sound-files/end.webm");
+    let gameStart = new Audio("../../assets/sound-files/gameStart-alt.mp3");
+    let warningSound = new Audio("../../assets/sound-files/warning.mp3");
+
+    var gameInfo = {
+        game: [{ startSquare: 52, targetSquare: 44 }],
+        perspective: -1,
+        myId: 1,
+        opponentId: 3,
+        winnerUsername: "shafaat",
+        loserUsername: "Hussain",
+        winnerRating: 230,
+        loserRating: 500,
+        winner: -1,
+        date: "April 3, 2024",
+    };
+    let perspective = gameInfo.perspective;
+    let winner = gameInfo.winner;
+    var Moves = gameInfo.game;
+
+    var moveTypes = [];
+
+    if (winner * perspective == 1) {
+        document.getElementsByClassName("profile-name")[1].innerHTML =
+            gameInfo.winnerUsername;
+        document.getElementsByClassName("profile-rating")[1].innerHTML =
+            "(" + gameInfo.winnerRating + ")";
+
+        document.getElementsByClassName("profile-name")[0].innerHTML =
+            gameInfo.loserUsername;
+        document.getElementsByClassName("profile-rating")[0].innerHTML =
+            "(" + gameInfo.loserRating + ")";
+    } else {
+        document.getElementsByClassName("profile-name")[0].innerHTML =
+            gameInfo.winnerUsername;
+        document.getElementsByClassName("profile-rating")[0].innerHTML =
+            "(" + gameInfo.winnerRating + ")";
+
+        document.getElementsByClassName("profile-name")[1].innerHTML =
+            gameInfo.loserUsername;
+        document.getElementsByClassName("profile-rating")[1].innerHTML =
+            "(" + gameInfo.loserRating + ")";
+    }
+
+    var str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq";
+    let chessboard = document.getElementById("chessBoard");
+    var pieceLocations = [];
+    var pointer = 0;
+    var turn = 1;
+    var moveCount = 0;
+    var squares = document.getElementsByClassName("square");
+
+    var board = setUpBoard(str, perspective);
+
+    function setUpBoard(position, perspective) {
+        let board = generateBoard(position, perspective);
+        putPieceOnBoard(board);
+        return board;
+    }
+    var chessPieces = document.getElementsByClassName("piece");
+
+    for (let move of Moves) {
+        if (board[move.targetSquare] * turn <= 0) {
+            move.capturePiece = board[move.targetSquare];
+        }
+        let type = MoveType(move);
+        moveTypes.push(type);
+        playMove(board, move);
+        if (turn * perspective == 1) moveCount++;
+        addMoveToAnalysisBoard(board, move, false);
+        refreshBoard(move, true, type);
+
+        changeTurn();
+        pointer++;
+    }
+
+    function playMove(board, move) {
+        if (move.isCastle) {
+            board[move.targetSquare] = board[move.startSquare];
+            board[move.startSquare] = 0;
+            board[move.castleEnd] = board[move.castleStart];
+            board[move.castleStart] = 0;
+        } else if (move.isPromotion) {
+            board[move.targetSquare] = move.promotionPiece;
+            board[move.startSquare] = 0;
+        } else if (move.isEnPassant) {
+            board[move.targetSquare] = board[move.startSquare];
+            board[move.startSquare] = 0;
+            board[move.enPassantSquare] = 0;
+        } else {
+            board[move.targetSquare] = board[move.startSquare];
+            board[move.startSquare] = 0;
+        }
+        return;
+    }
+
+    function changeTurn() {
+        if (turn == 1) turn = -1;
+        else turn = 1;
+    }
+    function generateBoard(str, perspective) {
+        let board = [];
+        let map = {
+            R: 6,
+            N: 3,
+            B: 4,
+            Q: 10,
+            K: 2,
+            P: 1,
+            r: -6,
+            n: -3,
+            b: -4,
+            q: -10,
+            k: -2,
+            p: -1,
+        };
+        let fragments = str.split(" ");
+
+        let i = 0;
+
+        for (char of fragments[0]) {
+            if (map.hasOwnProperty(char)) {
+                if (perspective == 1) {
+                    board[i] = map[char];
+                } else {
+                    board[63 - i] = map[char];
+                }
+                i++;
+            } else {
+                let num = parseInt(char);
+
+                for (j = 0; j < num; j++) {
+                    if (perspective == 1) {
+                        board[i] = 0;
+                    } else {
+                        board[63 - i] = 0;
+                    }
+                    i++;
+                }
+            }
+        }
+
+        return board;
+    }
+
+    function putPieceOnBoard(board) {
+        //creating elements
+        let count = 0;
+        for (let i = 0; i < 64; i++) {
+            let squares = document.getElementsByClassName("square");
+
+            let rect1 = squares[0].getBoundingClientRect();
+            let rect2 = squares[i].getBoundingClientRect();
+            if (i % 8 == 0) {
+                let yCoordinate = document.createElement("div");
+                yCoordinate.classList.add("yCoordinate");
+                if (i % 16 == 0) {
+                    yCoordinate.classList.add("dark-coordinate");
+                } else {
+                    yCoordinate.classList.add("light-coordinate");
+                }
+                yCoordinate.innerHTML = Rank(i);
+                yCoordinate.style.transform = `translate(0px, ${rect2.top - rect1.top
+                    }px)`;
+                chessboard.appendChild(yCoordinate);
+            }
+
+            if (Math.floor(i / 8) == 7) {
+                let xCoordinate = document.createElement("div");
+                xCoordinate.classList.add("xCoordinate");
+                if (i % 2 == 0) {
+                    xCoordinate.classList.add("light-coordinate");
+                } else {
+                    xCoordinate.classList.add("dark-coordinate");
+                }
+                xCoordinate.innerHTML = File(i);
+                xCoordinate.style.transform = `translate(${rect2.left - rect1.left + rect1.width / 1.2
+                    }px, 
+      ${7.6 * rect1.height}px)`;
+                chessboard.appendChild(xCoordinate);
+            }
+
+            if (board[i] == 0) {
+                continue;
+            }
+            let piece = document.createElement("img");
+            piece.classList.add("piece");
+            piece.src =
+                "../../assets/image-files/piece-images/" + board[i] + ".png";
+
+            piece.style.transform = `translate(${rect2.left - rect1.left}px, ${rect2.top - rect1.top
+                }px)`;
+            chessboard.appendChild(piece);
+            pieceLocations.push({ domIndex: count, squareIndex: i });
+            count++;
+            piece.addEventListener("dragstart", (e) => {
+                e.preventDefault();
+            });
+        }
+    }
+
+    function Rank(index) {
+        let y = Math.floor(index / 8);
+        return perspective == 1 ? 8 - y : y + 1;
+    }
+
+    function File(index) {
+        let str = "abcdefgh";
+        let x = index % 8;
+
+        return perspective == 1 ? str[x] : str[7 - x];
+    }
+
+    function NameSquare(index) {
+        let rank = Rank(index);
+        let file = File(index);
+        return file + rank.toString();
+    }
+
+    addEventListenerToMoveRecapeButtons();
+    function addEventListenerToMoveRecapeButtons() {
+        let moveRecapeButtons = document.getElementsByClassName("action");
+        moveRecapeButtons[1].addEventListener("click", (e) => {
+            fastBackward();
+        });
+        moveRecapeButtons[2].addEventListener("click", (e) => {
+            backward();
+        });
+        moveRecapeButtons[3].addEventListener("click", (e) => {
+            forward();
+        });
+        moveRecapeButtons[4].addEventListener("click", (e) => {
+            fastForward();
+        });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key == "ArrowLeft") {
+                backward();
+            } else if (e.key == "ArrowRight") {
+                forward();
+            } else if (e.key == "ArrowDown") {
+                fastForward();
+            } else if (e.key == "ArrowUp") {
+                fastBackward();
+            }
+        });
+    }
+
+    function forward() {
+        let moveRecapeButtons = document.getElementsByClassName("action");
+
+        if (pointer < Moves.length) {
+            refreshBoard(Moves[pointer], true, moveTypes[pointer]);
+            pointer++;
+        }
+        if (pointer >= Moves.length) {
+            chessboard.style.pointerEvents = "auto";
+            moveRecapeButtons[3].classList.add("disabled-recapeButton");
+            moveRecapeButtons[4].classList.add("disabled-recapeButton");
+        } else {
+            chessboard.style.pointerEvents = "none";
+        }
+
+        let active = document.getElementsByClassName("active-move");
+        let len = active.length;
+        for (let i = 0; i < len; i++) {
+            active[0].classList.remove("active-move");
+        }
+
+        document
+            .getElementsByClassName("move-pc")
+        [pointer - 1].classList.add("active-move");
+        document
+            .getElementsByClassName("move-mobile")
+        [pointer - 1].classList.add("active-move");
+    }
+
+    function backward() {
+        let moveRecapeButtons = document.getElementsByClassName("action");
+
+        if (pointer > 0) {
+            unMakeMove(Moves[pointer - 1], true, moveTypes[pointer - 1]);
+            pointer--;
+        }
+        chessboard.style.pointerEvents = "none";
+        if (pointer == 0) {
+            moveRecapeButtons[2].classList.add("disabled-recapeButton");
+            moveRecapeButtons[1].classList.add("disabled-recapeButton");
+        }
+
+        let active = document.getElementsByClassName("active-move");
+        let len = active.length;
+        for (let i = 0; i < len; i++) {
+            active[0].classList.remove("active-move");
+        }
+        if (pointer) {
+            document
+                .getElementsByClassName("move-pc")
+            [pointer - 1].classList.add("active-move");
+            document
+                .getElementsByClassName("move-mobile")
+            [pointer - 1].classList.add("active-move");
+        }
+    }
+
+    function fastForward() {
+        let moveRecapeButtons = document.getElementsByClassName("action");
+
+        if (Moves.length) {
+            while (pointer < Moves.length) {
+                refreshBoard(Moves[pointer], true, moveTypes[pointer]);
+                pointer++;
+            }
+            chessboard.style.pointerEvents = "auto";
+        }
+        moveRecapeButtons[4].classList.add("disabled-recapeButton");
+        moveRecapeButtons[3].classList.add("disabled-recapeButton");
+
+        let active = document.getElementsByClassName("active-move");
+        let len = active.length;
+        for (let i = 0; i < len; i++) {
+            active[0].classList.remove("active-move");
+        }
+        document
+            .getElementsByClassName("move-pc")
+        [pointer - 1].classList.add("active-move");
+        document
+            .getElementsByClassName("move-mobile")
+        [pointer - 1].classList.add("active-move");
+    }
+
+    function fastBackward() {
+        let moveRecapeButtons = document.getElementsByClassName("action");
+
+        if (Moves.length) {
+            while (pointer > 0) {
+                unMakeMove(Moves[pointer - 1], true, moveTypes[pointer - 1]);
+                pointer--;
+            }
+            chessboard.style.pointerEvents = "none";
+            moveRecapeButtons[1].classList.add("disabled-recapeButton");
+            moveRecapeButtons[2].classList.add("disabled-recapeButton");
+
+            let active = document.getElementsByClassName("active-move");
+            let len = active.length;
+            for (let i = 0; i < len; i++) {
+                active[0].classList.remove("active-move");
+            }
+            document.getElementsByClassName("analysis-board")[0].scrollTop = 0;
+        }
+    }
+
+    function refreshBoard(move, smooth, type) {
+        let rect1 = squares[0].getBoundingClientRect();
+        let rect2 = squares[move.targetSquare].getBoundingClientRect();
+        let pieceIndex = pieceLocations.find(
+            (obj) => obj.squareIndex === move.startSquare
+        ).domIndex;
+        let pieceIndex2 = pieceLocations.find(
+            (obj) => obj.squareIndex === move.targetSquare
+        );
+        if (smooth) {
+            chessPieces[pieceIndex].classList.add("smooth-piece");
+        }
+        setTimeout(() => {
+            chessPieces[pieceIndex].classList.remove("smooth-piece");
+        }, 300);
+
+        chessPieces[pieceIndex].style.transform = `translate(${rect2.left - rect1.left
+            }px, ${rect2.top - rect1.top}px)`;
+        if (move.capturePiece) {
+            let elementIndex = pieceLocations.find(
+                (obj) => obj.squareIndex === move.targetSquare
+            );
+            chessPieces[elementIndex.domIndex].style.display = "none";
+            elementIndex.squareIndex = generateUniqueNumber(
+                move.targetSquare,
+                move.capturePiece
+            );
+        }
+        if (move.isCastle) {
+            let castlePieceIndex = pieceLocations.find(
+                (obj) => obj.squareIndex === move.castleStart
+            ).domIndex;
+            chessPieces[castlePieceIndex].classList.add("smooth-piece");
+            setTimeout(() => {
+                chessPieces[castlePieceIndex].classList.remove("smooth-piece");
+            }, 300);
+            chessPieces[castlePieceIndex].style.transform = `translate(${squares[move.castleEnd].getBoundingClientRect().left - rect1.left
+                }px, ${squares[move.castleEnd].getBoundingClientRect().top - rect1.top
+                }px)`;
+            let elementIndex = pieceLocations.find(
+                (obj) => obj.squareIndex === move.castleStart
+            );
+            elementIndex.squareIndex = move.castleEnd;
+        } else if (move.isPromotion) {
+            chessPieces[pieceIndex].src =
+                "../../assets/image-files/piece-images/" +
+                board[move.targetSquare] +
+                ".png";
+        } else if (move.isEnPassant) {
+            let enPassantPiece = pieceLocations.find(
+                (obj) => obj.squareIndex == move.enPassantSquare
+            );
+
+            chessPieces[enPassantPiece.domIndex].style.display = "none";
+
+            enPassantPiece.squareIndex = generateUniqueNumber(
+                move.enPassantSquare,
+                -board[move.targetSquare]
+            );
+        }
+        pieceLocations.find(
+            (obj) => obj.squareIndex === move.startSquare
+        ).squareIndex = move.targetSquare;
+        highlightLastMove(move.startSquare, move.targetSquare);
+        playSoundEffects(type);
+        document
+            .getElementsByClassName("action")[1]
+            .classList.remove("disabled-recapeButton");
+        document
+            .getElementsByClassName("action")[2]
+            .classList.remove("disabled-recapeButton");
+        let active = document.getElementsByClassName("active-move");
+        if (active.length) {
+            let mobileActiveMove = active[0];
+            let pcActiveMove = active[1];
+            document.getElementsByClassName("analysis-board")[0].scrollTop =
+                pcActiveMove.offsetTop;
+        }
+    }
+    function refreshWholeBoard() {
+        let rect1 = squares[0].getBoundingClientRect();
+
+        for (let i = 0; i < chessPieces.length; i++) {
+            let element = chessPieces[i];
+            let squareIndex = pieceLocations.find(
+                (obj) => obj.domIndex === i
+            ).squareIndex;
+
+            if (squareIndex >= 0 && squareIndex < 64) {
+                let rect2 = squares[squareIndex].getBoundingClientRect();
+                element.style.transform = `translate(${rect2.left - rect1.left}px, ${rect2.top - rect1.top
+                    }px)`;
+            }
+        }
+
+        let xCoordinate = document.getElementsByClassName("xCoordinate");
+        let yCoordinate = document.getElementsByClassName("yCoordinate");
+        for (let i = 0; i < 8; i++) {
+            xCoordinate[i].style.transform = `translate(${squares[i].getBoundingClientRect().left -
+                rect1.left +
+                rect1.width / 1.2
+                }px, 
+      ${7.6 * rect1.height}px)`;
+        }
+        for (let i = 0; i < 8; i++) {
+            yCoordinate[i].style.transform = `translate(0px, ${squares[8 * i].getBoundingClientRect().top - rect1.top
+                }px)`;
+        }
+    }
+
+    window.addEventListener("resize", (e) => {
+        e.preventDefault();
+        refreshWholeBoard();
+    });
+
+    function unMakeMove(move, smooth, type) {
+        let rect1 = squares[0].getBoundingClientRect();
+        let rect2 = squares[move.startSquare].getBoundingClientRect();
+        let pieceIndex = pieceLocations.find(
+            (obj) => obj.squareIndex === move.targetSquare
+        ).domIndex;
+        let pieceIndex2 = pieceLocations.find(
+            (obj) => obj.squareIndex === move.startSquare
+        );
+
+        setTimeout(() => {
+            chessPieces[pieceIndex].classList.remove("smooth-piece");
+        }, 300);
+
+        chessPieces[pieceIndex].style.transform = `translate(${rect2.left - rect1.left
+            }px, ${rect2.top - rect1.top}px)`;
+
+        if (smooth) {
+            chessPieces[pieceIndex].classList.add("smooth-piece");
+        }
+        if (move.isCastle) {
+            pieceLocations.find(
+                (obj) => obj.squareIndex === move.targetSquare
+            ).squareIndex = move.startSquare;
+            let castlePieceIndex = pieceLocations.find(
+                (obj) => obj.squareIndex === move.castleEnd
+            ).domIndex;
+            chessPieces[castlePieceIndex].classList.add("smooth-piece");
+            setTimeout(() => {
+                chessPieces[castlePieceIndex].classList.remove("smooth-piece");
+            }, 300);
+            chessPieces[castlePieceIndex].style.transform = `translate(${squares[move.castleStart].getBoundingClientRect().left - rect1.left
+                }px, ${squares[move.castleStart].getBoundingClientRect().top - rect1.top
+                }px)`;
+            let elementIndex = pieceLocations.find(
+                (obj) => obj.squareIndex === move.castleEnd
+            );
+
+            elementIndex.squareIndex = move.castleStart;
+        } else if (move.isEnPassant) {
+            pieceLocations.find(
+                (obj) => obj.squareIndex === move.targetSquare
+            ).squareIndex = move.startSquare;
+            let enPassantPiece = pieceLocations.find(
+                (obj) =>
+                    obj.squareIndex ==
+                    generateUniqueNumber(
+                        move.enPassantSquare,
+                        -board[move.targetSquare]
+                    )
+            );
+
+            chessPieces[enPassantPiece.domIndex].style.display = "flex";
+            enPassantPiece.squareIndex = move.enPassantSquare;
+        } else if (move.isPromotion) {
+            pieceLocations.find(
+                (obj) => obj.squareIndex === move.targetSquare
+            ).squareIndex = move.startSquare;
+            chessPieces[pieceIndex].src =
+                "../../assets/image-files/piece-images/" +
+                (board[move.targetSquare] >= 0 ? 1 : -1) +
+                ".png";
+            let capturedPiece = pieceLocations.find(
+                (obj) =>
+                    obj.squareIndex ==
+                    generateUniqueNumber(move.targetSquare, move.capturePiece)
+            );
+            chessPieces[capturedPiece.domIndex].style.display = "flex";
+            capturedPiece.squareIndex = move.targetSquare;
+        } else if (move.capturePiece) {
+            pieceLocations.find(
+                (obj) => obj.squareIndex === move.targetSquare
+            ).squareIndex = move.startSquare;
+            let elementIndex = pieceLocations.find(
+                (obj) =>
+                    obj.squareIndex ===
+                    generateUniqueNumber(move.targetSquare, move.capturePiece)
+            );
+            chessPieces[elementIndex.domIndex].style.display = "flex";
+            elementIndex.squareIndex = move.targetSquare;
+        } else {
+            pieceLocations.find(
+                (obj) => obj.squareIndex === move.targetSquare
+            ).squareIndex = move.startSquare;
+        }
+
+        highlightLastMove(move.targetSquare, move.startSquare);
+        playSoundEffects(type);
+
+        document
+            .getElementsByClassName("action")[3]
+            .classList.remove("disabled-recapeButton");
+        document
+            .getElementsByClassName("action")[4]
+            .classList.remove("disabled-recapeButton");
+    }
+
+    function highlightLastMove(initial, final) {
+        let prev1 = document.getElementsByClassName("start-square");
+        let prev2 = document.getElementsByClassName("target-square");
+        if (prev1.length && prev2.length) {
+            prev1[0].classList.remove("start-square");
+            prev2[0].classList.remove("target-square");
+        }
+
+        let checkSquare = document.getElementsByClassName("check-square");
+        if (checkSquare.length) {
+            checkSquare[0].classList.remove("check-square");
+        }
+
+        document
+            .getElementsByClassName("square")
+        [initial].classList.add("start-square");
+        document
+            .getElementsByClassName("square")
+        [final].classList.add("target-square");
+    }
+    function playSoundEffects(type) {
+        switch (type) {
+            case "check":
+                checkSound.play();
+                break;
+            case "castle":
+                castleSound.play();
+                break;
+            case "promotion":
+                promotionSound.play();
+                break;
+            case "capture":
+                captureSound.play();
+                break;
+            case "move":
+                moveSound.play();
+                break;
+
+            default:
+                moveSound.play();
+        }
+    }
+
+    function addMoveToAnalysisBoard(board, movePlayed, check) {
+        if (turn == -1) {
+            let div = document.createElement("move");
+            div.classList.add("move");
+            div.classList.add("move-pc");
+            //highlightine the current move
+            let currentMove = document.getElementsByClassName("active-move");
+            let len = currentMove.length;
+            for (let i = 0; i < len; i++) {
+                currentMove[0].classList.remove("active-move");
+            }
+            div.classList.add("active-move");
+            let moveDiv = document.getElementsByClassName("moveDiv");
+            let d = moveDiv[moveDiv.length - 1];
+            let move = NameMove(movePlayed, board[movePlayed.targetSquare], check);
+            div.innerHTML = `${move}`;
+            d.appendChild(div.cloneNode(true));
+            div.classList.add("move-mobile");
+            div.classList.remove("move-pc");
+            moveDiv[moveDiv.length / 2 - 1].appendChild(div);
+
+            return;
+        }
+
+        let move = NameMove(movePlayed, board[movePlayed.targetSquare], check);
+        let moveDiv = document.createElement("div");
+        moveDiv.classList.add("moveDiv");
+        let numberDiv = document.createElement("div");
+        numberDiv.classList.add("number-div");
+        numberDiv.innerHTML = `${moveCount}`;
+        // numberDiv.classList.add('move')
+        let div = document.createElement("div");
+        div.classList.add("move");
+        div.classList.add("move-pc");
+        div.innerHTML = `${move}`;
+        //
+        //highlightine the current move
+        let currentMove = document.getElementsByClassName("active-move");
+        let len = currentMove.length;
+        for (let i = 0; i < len; i++) {
+            currentMove[0].classList.remove("active-move");
+        }
+        div.classList.add("active-move");
+        //
+        moveDiv.appendChild(numberDiv);
+
+        moveDiv.appendChild(div);
+        document
+            .getElementsByClassName("analysis-board")[0]
+            .appendChild(moveDiv.cloneNode(true));
+        div.classList.add("move-mobile");
+        div.classList.remove("move-pc");
+        document
+            .getElementsByClassName("analysis-board-mobile")[0]
+            .appendChild(moveDiv.cloneNode(true));
+    }
+
+    function NameMove(move, startPiece, check) {
+        let name;
+        if (move.isCastle) {
+            if (perspective == 1) {
+                switch (move.castleStart) {
+                    case 63:
+                        name = "O-O";
+                        break;
+                    case 56:
+                        name = "O-O-O";
+                        break;
+                    case 7:
+                        name = "o-o";
+                        break;
+                    case 0:
+                        name = "o-o-o";
+                        break;
+                }
+            } else {
+                switch (move.castleStart) {
+                    case 63:
+                        name = "o-o-o";
+                        break;
+                    case 56:
+                        name = "o-o";
+                        break;
+                    case 7:
+                        name = "O-O-O";
+                        break;
+                    case 0:
+                        name = "O-O";
+                        break;
+                }
+            }
+        } else if (move.isPromotion) {
+            if (move.capturePiece) {
+                name =
+                    File(move.startSquare) +
+                    "x" +
+                    NameSquare(move.targetSquare) +
+                    "=" +
+                    pieceName(move.promotionPiece);
+            } else {
+                name =
+                    NameSquare(move.targetSquare) +
+                    "=" +
+                    pieceName(move.promotionPiece).toUpperCase();
+            }
+        } else if (move.isEnPassant) {
+            name =
+                File(move.startSquare) +
+                "x" +
+                NameSquare(move.enPassantSquare) +
+                " e.p.";
+        } else if (move.capturePiece) {
+            if (Math.abs(startPiece) == 1) {
+                name = File(move.startSquare) + "x" + NameSquare(move.targetSquare);
+            } else {
+                name =
+                    pieceName(startPiece).toUpperCase() +
+                    "x" +
+                    NameSquare(move.targetSquare);
+            }
+        } else {
+            name =
+                pieceName(startPiece).toUpperCase() + NameSquare(move.targetSquare);
+        }
+
+        if (check) {
+            name += "+";
+        }
+        return name;
+    }
+
+    function pieceName(piece) {
+        switch (piece) {
+            case 10:
+                return "Q";
+            case 6:
+                return "R";
+            case 3:
+                return "N";
+            case 4:
+                return "B";
+            case 2:
+                return "K";
+            case 1:
+                return "";
+            case -10:
+                return "q";
+            case -6:
+                return "r";
+            case -3:
+                return "n";
+            case -4:
+                return "b";
+            case -2:
+                return "k";
+            case -1:
+                return "";
+            default:
+                return piece;
+        }
+    }
+
+    function generateUniqueNumber(squareIndex, piece) {
+        // Prime numbers for hashing
+        const prime1 = 17;
+        const prime2 = 31;
+
+        // Generate unique number using prime number multiplication
+        return squareIndex * prime1 + piece * prime2;
+    }
+    function MoveType(move) {
+        if (move.isPromotion) {
+            return "promotion";
+        }
+        //checking for castling
+        else if (move.isCastle) {
+            return "castle";
+        }
+        //checking for en passant
+        else if (move.isEnPassant || move.capturePiece) {
+            return "capture";
+        }
+        return "move";
+    }
+</script>
+
+</html>

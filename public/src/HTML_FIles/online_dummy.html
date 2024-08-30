@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Play with computer</title>
+    <link rel="stylesheet" href="../../src/CSS_Files/white.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+
+</head>
+
+<style>
+    .game-settings-wrapper {
+        display: flex;
+        flex-direction: column;
+        background-color: #222;
+        min-width: 30vw;
+        padding: 1vw 3vw;
+        margin-left: 1vw;
+        color: rgb(216, 207, 207);
+        /* height: var(--puzzle-board-width); */
+        /* height: 50vh; */
+        justify-self: center;
+        align-self: center;
+        overflow: auto;
+        /* height: 100%; */
+        /* align-items: center; */
+        max-height: 38.5vw;
+        overflow: auto;
+    }
+
+
+    .big-button {
+        cursor: pointer;
+        border-radius: 3px;
+        /* padding: 0.5vw 0.5vw; */
+        box-shadow: 3px 0px 0px rgba(93, 131, 5, 0.6), 3px 0px 0px rgba(120, 180, 15, 0.6);
+        background-image: linear-gradient(to bottom, #6d9e05, #5f8805);
+        color: white;
+
+    }
+
+    .big-button:hover {
+        background-image: linear-gradient(to bottom, #77aa09, #6d9c06);
+
+    }
+
+    .play-button {
+        /* align-self: center; */
+        padding: 1vw 10%;
+        text-align: center;
+        margin: 3% 0;
+    }
+
+    .cancel-button {
+        padding: 1vw 10%;
+        text-align: center;
+        margin: 3% 0;
+        background-color: red;
+    }
+
+    .game-settings {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .settings-selection {
+        display: flex;
+        flex-direction: column;
+        display: none;
+        text-wrap: nowrap;
+    }
+
+    .settings-selection-component {
+        display: flex;
+        flex-direction: column;
+        margin: 3% 0;
+
+    }
+
+    .game-settings-title {
+        align-self: center;
+
+    }
+
+    .game-settings>div {
+        width: 100%;
+    }
+
+    .settings-selected {
+        align-self: center;
+        width: 100%;
+    }
+
+    .settings-selection-component {
+        display: flex;
+    }
+
+    .choice {
+        background-color: #e7e1e129;
+        text-align: center;
+        padding: 5%;
+        display: flex;
+        cursor: pointer;
+        display: none;
+    }
+
+    .choice:hover {
+        background-color: #aaa1a129;
+    }
+
+    .choice>div {
+        margin: 0 1%;
+    }
+
+    .active-choice {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    .time-control-options {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .time-control-option {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1% 0;
+        background-color: #e7e1e129;
+        border-right: 1px solid gray;
+        padding: 1vw;
+        cursor: pointer;
+    }
+
+    .time-control-option>div {
+        margin: 0 10%;
+    }
+
+    .active-time-control-option {
+        background-color: var(--secondary);
+
+    }
+
+    .fa-stopwatch {
+        color: #6d9c06;
+        font-size: large;
+    }
+
+    .fa-bolt {
+        color: goldenrod;
+        font-size: large;
+    }
+
+    .fa-rocket {
+        color: orangered;
+        font-size: large;
+    }
+
+    .match-starting-info-div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        display: none;
+        align-items: center;
+    }
+
+    .match-starting-info-div>div {
+        margin: 3% 0;
+    }
+
+    .search-cancel-button {
+        background-color: var(--accent);
+        padding: 1vh 1vw;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+
+
+    <div class="header-mobile">
+        <div class="nav-options-mobile">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo">
+            <i class="fas fa-chess"></i>
+            PiChess.org
+        </div>
+        <div class="search-bar-mobile">
+            <i class="fas fa-search search-icon-mobile"></i>
+        </div>
+        <div class="user-info-mobile">
+            <i class="fas fa-user-plus"></i>
+        </div>
+
+
+
+    </div>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-chess"></i>
+            PiChess.org
+        </div>
+
+
+    </div>
+
+    <div class="main">
+        <div class="board">
+            <div class="topPlayer blackPlayer">
+
+                <div class="player-profile" id="opponent-profile">
+
+                    <div class="profile-title">
+
+
+                    </div>
+                    <div class="profile-name">
+                        Opponent
+
+                    </div>
+                    <div class="profile-rating">
+
+
+                    </div>
+
+                </div>
+                <div class="timer black-timer disabled-black-timer">
+                    <div class="timer-icon"><i class="fas fa-clock"></i></div>
+                    <div class="min">02</div>
+                    <div>:</div>
+                    <div class="sec">00</div>
+                </div>
+            </div>
+            <div id="chessBoard">
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+            </div>
+
+            <div class="bottomPlayer">
+
+                <div class="player-profile" id="my-profile">
+
+                    <div class="profile-title">
+                        NB
+
+                    </div>
+                    <div class="profile-name">
+                        Shafaat_Hussain
+
+
+                    </div>
+                    <div class="profile-rating">
+
+                        (3200)
+
+
+                    </div>
+                    <div class="reconnecting">
+                        <i class="fas fa-unlink"></i>
+                    </div>
+                    <div class="reconnected">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                </div>
+                <div class="timer white-timer">
+                    <div class="timer-icon"><i class="fas fa-clock"></i></div>
+                    <div class="min">02</div>
+                    <div>:</div>
+                    <div class="sec">00</div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="game-settings-wrapper">
+            <div class="game-settings-title">
+                <h2>Time Control</h2>
+            </div>
+            <div class="game-settings">
+                <div class="settings-selected">
+                    <div class="blitz-choice choice active-choice" onclick="revealSettingsSelection()">
+                        <div class="selected-choice-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="selected-choice-value">2 min</div>
+                    </div>
+                    <div class="rapid-choice choice" onclick="revealSettingsSelection()">
+                        <div class="selected-choice-icon"><i class="fas fa-stopwatch"></i></div>
+                        <div class="selected-choice-value"></div>
+                    </div>
+
+                </div>
+
+                <div class="settings-selection">
+                    <div class="settings-selection-component bullet">
+                        <div class="settings-selection-component-label"><i class="fas fa-rocket"></i> Bullet</div>
+                        <div class="time-control-options">
+
+                            <div class="time-control-option">
+                                <div class="time">1 min</div>
+
+                            </div>
+                            <div class="time-control-option">
+                                <div class="time">1</div>|
+                                <div class="increment">1</div>
+                            </div>
+                            <div class="time-control-option">
+                                <div class="time">1</div>|
+                                <div class="increment">1</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="settings-selection-component blitz">
+                        <div class="settings-selection-component-label"><i class="fas fa-bolt blitz-icon"></i> Blitz
+                        </div>
+                        <div class="time-control-options">
+
+                            <div class="time-control-option active-time-control-option">
+                                <div class="time">2 min</div>
+
+                            </div>
+                            <div class="time-control-option">
+                                <div class="time">1</div>|
+                                <div class="increment">1</div>
+                            </div>
+                            <div class="time-control-option">
+                                <div class="time">3 min</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="settings-selection-component rapid">
+                        <div class="settings-selection-component-label"><i class="fas fa-stopwatch rapid-icon"></i>
+                            Rapid
+                        </div>
+                        <div class="time-control-options">
+
+                            <div class="time-control-option">
+                                <div class="time">10 min</div>
+
+                            </div>
+                            <div class="time-control-option">
+                                <div class="time">15</div>|
+                                <div class="increment">10</div>
+                            </div>
+                            <div class="time-control-option">
+                                <div class="time">30 min</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <h2 class="play-button big-button" onclick="findOnineMatch()">
+                Play
+            </h2>
+
+
+            <div class="match-starting-info-div">
+                <div class="search-game-details">
+                    <h2 class="type">Blitz</h2>
+                    <div class="time-control">2 min</div>
+                </div>
+                <div class="searching-message">
+                    Starting soon...
+                </div>
+                <div class="search-cancel-button" onclick="cancelOnlineMatch()">
+                    Cancel
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+</body>
+
+<script>
+    const board = [-6, -3, -4, -10, -2, -4, -3, -6, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 6, 3, 4, 10, 2, 4, 3, 6];
+    let chessboard = document.getElementById('chessBoard')
+    putPieceOnBoard(board)
+    function revealSettingsSelection() {
+        document.getElementsByClassName('settings-selection')[0].style.display = 'flex'
+    }
+    function putPieceOnBoard(board) {
+        for (let i = 0; i < 64; i++) {
+            if (board[i] == 0) {
+                continue;
+            }
+            let piece = document.createElement("img");
+            piece.classList.remove("blankImage");
+            piece.classList.add("piece");
+            piece.src = "../../assets/image-files/piece-images/" + board[i] + ".png";
+            let squares = document.getElementsByClassName("square");
+            let rect1 = squares[0].getBoundingClientRect();
+            let rect2 = squares[i].getBoundingClientRect();
+            piece.style.transform = `translate(${rect2.left - rect1.left}px, ${rect2.top - rect1.top
+                }px)`;
+            // piece.style.left = rect2.left - chessBoard.getBoundingClientRect().left + 'px';
+            // piece.style.top = rect2.top - chessBoard.getBoundingClientRect().top + 'px';
+            chessboard.appendChild(piece);
+        }
+    }
+
+    function findOnineMatch() {
+        document.getElementsByClassName('profile-name')[0].innerHTML = 'Searching <i class="fas fa-spinner fa-spin"></i>'
+        document.getElementsByClassName('game-settings')[0].style.display = "none"
+        document.getElementsByClassName('game-settings-title')[0].style.display = "none"
+        document.getElementsByClassName('play-button')[0].style.display = "none"
+        document.getElementsByClassName('match-starting-info-div')[0].style.display = "flex"
+
+    }
+    function cancelOnlineMatch() {
+        document.getElementsByClassName('profile-name')[0].innerHTML = 'Opponent'
+        document.getElementsByClassName('game-settings')[0].style.display = "flex"
+        document.getElementsByClassName('game-settings-title')[0].style.display = "flex"
+        document.getElementsByClassName('play-button')[0].style.display = "block"
+        document.getElementsByClassName('match-starting-info-div')[0].style.display = "none"
+
+    }
+</script>
+
+
+</html>

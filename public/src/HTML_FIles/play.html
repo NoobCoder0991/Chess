@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PiChess</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="../../src/CSS_Files/play.css">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+</head>
+
+
+
+
+<body>
+
+
+
+    <div class="mini-board-wrapper">
+        <div class="mini-board">
+            <div class="mini-file">
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+            </div>
+            <div class="mini-file">
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+            </div>
+            <div class="mini-file">
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+            </div>
+            <div class="mini-file">
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+            </div>
+            <div class="mini-file">
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+            </div>
+            <div class="mini-file">
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+            </div>
+            <div class="mini-file">
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+            </div>
+            <div class="mini-file">
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+                <div class="mini-square mini-dark-square"></div>
+                <div class="mini-square mini-light-square"></div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="warning-message-wrapper">
+        <div class="warning-message">
+            <div class="warning-message-text"></div>
+            <div class="warning-close-button"
+                onclick="document.getElementsByClassName('warning-message-wrapper')[0].style.display='none'"><i
+                    class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+    <div class="success-message"></div>
+
+    <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
+    <div class="main">
+        <div class="header-mobile">
+            <div class="nav-options-mobile">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <i class="fas fa-chess"></i>
+                PiChess.org
+            </div>
+            <div class="search-bar-mobile">
+                <i class="fas fa-search search-icon-mobile"></i>
+            </div>
+            <div class="user-info-mobile">
+                <i class="fas fa-user-plus"></i>
+            </div>
+
+
+
+        </div>
+        <div class="header">
+            <div class="left-header">
+                <div class="logo">
+                    <i class="fas fa-chess"></i>
+                    PiChess.org
+
+                </div>
+                <div class="profile" onclick="window.location.href='/profile'">
+                    <div style="margin-right: 0.5vw;" class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="" id="username"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="right-header">
+                <div class="logout-option" onclick="logout(this)">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="play-options-card">
+
+            <div class="play-options card">
+                <div class="online-searching">
+                    <div class="online-searching-animation">
+                        <div class="loading-animation"></div>
+                    </div>
+
+
+
+
+                    <div class="subtitle">This might take some time! <a href="">Learn more</a></div>
+                    <div class="online-searching-stop" onclick="cancelOnlineSearch()">
+                        cancel
+                    </div>
+
+                </div>
+                <div class="play-options-card-title">
+                    <h2><i class="fas fa-chess"></i> Play Chess</h2>
+                </div>
+
+                <div class="play-button  id=" play-online-button" onclick="playOnline()"><i class="fas fa-globe"></i>
+                    Play Online
+                </div>
+                <div class="play-button " id="play-computer-button" onclick="playComputer()"><i
+                        class="fas fa-desktop"></i> Play With Computer</div>
+                <div class="play-button " id="play-online-button" onclick="playStockfish()"><i class="fas fa-fish"></i>
+                    Play
+                    With Stockfish</div>
+                <div class="play-button "><i class="fas fa-cogs"></i>
+                    Create a Custom game</div>
+            </div>
+            <div class="puzzle-board card">
+
+                <div class="player-profile" id="opponent-profile">
+                    <div class="profile-icon">
+                        <img src="../../assets/image-files/default_profile.gif" alt="" class="profile-image">
+                    </div>
+                    <div class="profile-name">
+                        Opponent
+
+                    </div>
+                    <div class="profile-rating">
+
+                    </div>
+                    <div class="opponent-searching">
+                        Searching
+
+                        <i class="fas fa-spinner fa-spin"></i>
+
+                    </div>
+                </div>
+                <div style="align-self: center;">
+                    <h2><i class="fas fa-puzzle-piece"></i>
+                        Daily Puzzle</h2>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+
+                <div class="solve-puzzle-button big-button" onclick="window.location.href='/dialy/puzzle'">Solve Daily
+                    Puzzle</div>
+
+            </div>
+            <!-- <div class="puzzle-board card">
+                <div style="align-self: center;">
+                    <h2>
+                        <i class=" fas fa-chalkboard-teacher"></i>
+                        Lessons
+                    </h2>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                </div>
+                <div class="rank">
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                    <div class="square dark-square"></div>
+                    <div class="square light-square"></div>
+                </div>
+
+                <div class="take-lessons-button big-button">Take Lessons</div>
+
+
+            </div> -->
+
+            <div class="completed-games card">
+                <div class="completed-games-title">
+                    <div>Completed Games</div>
+                    <div class="more-completed-games" onclick="window.location.href='/games?page=1'"><i
+                            class="fas fa-chevron-right"></i></div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Players</th>
+                                <th>Result</th>
+                                <th>Accuracy</th>
+                                <th>Moves</th>
+                                <th>Date</th>
+                                <!-- <th>Download</th> -->
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <!-- Table rows -->
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+        <div class="big-button create-engine">
+            Create your own Engine
+        </div>
+
+
+
+
+        <div class="advanced-footer">
+            <div class="footer-links">
+                <a href="" class="footer-link">Help</a> |
+                <a href="" class="footer-link">Chess Terms</a> |
+                <a href="" class="footer-link">About</a> |
+                <a href="" class="footer-link">Students</a> |
+                <a href="" class="footer-link">Jobs</a> |
+                <a href="" class="footer-link">Developers</a> |
+                <a href="" class="footer-link">User Agreement</a> |
+                <a href="" class="footer-link">Privace</a> |
+                <a href="" class="footer-link">Fair Play</a> |
+                <a href="" class="footer-link">Partners</a> |
+                <a href="" class="footer-link">PiChess.org &copy; 2023-2024</a>
+            </div>
+
+            <div class="footer-options">
+                <div class="footer-download-options">
+                    <a href="" class="footer-download-option footer-option"><i class="fab fa-apple"></i>
+                    </a>
+                    <a href="" class="footer-download-option footer-option"><i class="fab fa-android"></i></a>
+
+                </div>
+                <div class="footer-contact-options">
+                    <a href=""><i class="footer-option fab fa-facebook"></i></a>
+                    <a href=""><i class="footer-option fab fa-twitter"></i></a>
+                    <a href=""><i class="footer-option fab fa-instagram"></i></a>
+                    <a href=""><i class="footer-option fab fa-youtube"></i></a>
+                    <a href=""><i class="footer-option fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+
+</body>
+<script src="../../src/JS_FIles/play.js"></script>
+
+
+</html>
