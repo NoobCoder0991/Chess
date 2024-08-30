@@ -28,62 +28,13 @@ async function handleSignUp(app) {
         let code = helper_functions.generateCode(6);
         console.log("Code", code)
         helper_functions.sendOTP(email, username, code)
-            .then(data => {
+            .then(async (data) => {
                 console.log("email sent")
                 const authToken = helper_functions.generateToken(16);
-                const authenticationToken = { token: authToken, startTime: new Date().getTime(), lifeTime: 300000, valid: true }
-                app.get(`/signup/auth`, (req, res) => {
-                    res.sendFile(
-                        path.join(__dirname, "/public/src/otpauth.html")
-                    );
-                })
+                const authenticationToken = { token: authToken, otp: code, username, email, startTime: new Date().getTime(), lifeTime: 300000, valid: true }
+                await db.collection('auth-tokens').insertOne(authenticationToken);
                 res.send({ message: "Email has been sent to your email id: " + requestData.email, ok: true, url: `${authToken}` });
-                app.post('/auth', async (req, res) => {
-                    let requestData = req.body;
-                    const providedToken = requestData.token;
-                    const providedOTP = requestData.otp;
-                    if (providedToken == authToken && providedOTP === code && authenticationToken.valid && (new Date().getTime() - authenticationToken.startTime <= authenticationToken.lifeTime)) {
-                        const password = helper_functions.generateToken(8);
-                        helper_functions.sendAccountDetails(email, username, password)
-                            .then(async (data) => {
-                                const users = await db.collection("users")
-                                const userid = await users.countDocuments() + 1;
-                                await users.insertOne({ userid: userid, email: email, password: password, username: username })
-                                let info = {
-                                    username: username, email: email, rating: 300, total_games: 0, games_won: 0, games_lost: 0, games_won_as_white: 0, games_won_as_black: 0, games_draw: 0, games: [], title: "NB"
-                                }
-                                await db.collection("game_info").insertOne({ userid: userid, info: info });
-                                res.send({ ok: true, username })
-                            })
-                            .catch(err => {
-                                console.log("Error:", err)
-                                res.send({ ok: false, errMessage: "Unknown Error: Error Authenticating Email!" })
-                            })
 
-
-                        authenticationToken.valid = false;
-                    }
-                    else {
-
-                        if (providedToken != authToken || !authenticationToken.valid) {
-                            res.send({ ok: false, errMessage: "Error 401:  Session Expired" })
-
-                        }
-                        else if (providedOTP != code) {
-
-                            res.send({ ok: false, errMessage: "Error 403: Wrong OTP" })
-                        }
-                        else if (new Date().getTime() - authenticationToken.startTime > authenticationToken.lifeTime) {
-
-                            res.send({ ok: false, errMessage: "OTP Expired" })
-                        }
-                        else {
-
-                            res.send({ ok: false, errMessage: "Error 401:  Session Expired" })
-                        }
-                        authenticationToken.valid = false;
-                    }
-                })
             })
             .catch(err => {
                 console.error("Error", err)
@@ -91,6 +42,49 @@ async function handleSignUp(app) {
             })
 
     });
+
+    app.get(`/signup/auth/`, (req, res) => {
+        res.sendFile(
+            path.join(__dirname, "/public/src/otpauth.html")
+        );
+    })
+
+    app.post('/auth', async (req, res) => {
+        let requestData = req.body;
+        const providedToken = requestData.token;
+        const providedOTP = requestData.otp;
+        const authenticationToken = await db.collection('auth-tokens').findOne({ otp: providedOTP });
+
+        console.log("authentication token", authenticationToken);
+        console.log("provided details", { providedOTP, providedToken });
+        if (authenticationToken && providedToken == authenticationToken.token && providedOTP === authenticationToken.otp && authenticationToken.valid && (new Date().getTime() - authenticationToken.startTime <= authenticationToken.lifeTime)) {
+            const password = helper_functions.generateToken(8);
+            const email = authenticationToken.email, username = authenticationToken.username;
+            helper_functions.sendAccountDetails(email, username, password)
+                .then(async (data) => {
+                    const users = await db.collection("users")
+                    const userid = await users.countDocuments() + 1;
+                    await users.insertOne({ userid: userid, email: email, password: password, username: username })
+                    let info = {
+                        username: username, email: email, rating: 300, total_games: 0, games_won: 0, games_lost: 0, games_won_as_white: 0, games_won_as_black: 0, games_draw: 0, games: [], title: "NB"
+                    }
+                    await db.collection("game_info").insertOne({ userid: userid, info: info });
+                    res.send({ ok: true, username })
+                })
+                .catch(err => {
+                    console.log("Error:", err)
+                    res.send({ ok: false, errMessage: "Unknown Error: Error Authenticating Email!" })
+                })
+
+            await db.collection('auth-tokens').deleteOne({ otp: providedOTP });
+        }
+        else {
+
+            res.send({ ok: false, errMessage: "Invalid OTP or session Expired" })
+            await db.collection('auth-tokens').deleteOne({ otp: providedOTP });
+            await db.collection('auth-tokens').deleteOne({ token: providedToken });
+        }
+    })
 
 
 

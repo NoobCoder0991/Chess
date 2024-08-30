@@ -272,8 +272,8 @@
                 .then(data => {
                     console.log(data)
                     if (data.ok) {
-                        successMessage(data.message)
-                        window.location.href = "/signup/auth?token=" + encodeURIComponent(data.url)
+                        successMessage(data.username)
+                        window.location.href = `signup/auth?token=` + encodeURIComponent(data.url);
                     }
                     else {
                         warningMessage(data.message)

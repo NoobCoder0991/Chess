@@ -1,6 +1,12 @@
 const nodemailer = require('nodemailer');
 const fs = require('fs')
 const pug = require('pug')
+
+require('dotenv').config();
+
+const email = process.env.EMAIL;
+const password = process.env.PASSWORD;
+
 function generateURL(length) {
   const template =
     "0123456789QWERTYUIOPASDFGHJKLMNBVCXZqwertyuioplkjhgfdsazxcbnm";
