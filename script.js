@@ -58,7 +58,7 @@ const isAuthenticated = async (req, res, next) => {
 };
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/public/src/HTML_Files/index.html"))
+  res.sendFile(path.join(__dirname, "/public/src/index.html"))
 });
 app.get('/profile', async (req, res) => {
   const db = await handleDatabase("Chess")
@@ -78,7 +78,7 @@ app.get('/profile', async (req, res) => {
 
 app.get("/signup", (req, res) => {
   res.sendFile(
-    path.join(__dirname, "/public/src/HTML_Files/signup.html")
+    path.join(__dirname, "/public/src/signup.html")
   );
   // res.send("<h1>404- Not Found</h1><br><a href='/'>Home</a>")
 });
@@ -92,29 +92,29 @@ app.get("/login", async (req, res) => {
   else {
 
     res.sendFile(
-      path.join(__dirname, "/public/src/HTML_Files/login.html")
+      path.join(__dirname, "/public/src/login.html")
     );
   }
 });
 
 app.get("/play", isAuthenticated, (req, res) => {
 
-  res.sendFile(path.join(__dirname, "/public/src/HTML_Files/play.html"))
+  res.sendFile(path.join(__dirname, "/public/src/play.html"))
 });
 app.get("/dialy/puzzle", isAuthenticated, (req, res) => {
 
-  res.sendFile(path.join(__dirname, "/public/src/HTML_Files/puzzle.html"))
+  res.sendFile(path.join(__dirname, "/public/src/puzzle.html"))
 });
 
 
 
 app.get('/games', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, "/public/src/HTML_Files/all_games.html"))
+  res.sendFile(path.join(__dirname, "/public/src/all_games.html"))
 
 })
 
 app.get("/logged-out", (req, res) => {
-  res.sendFile(path.join(__dirname, "/public/src/HTML_Files/logged-out.html"))
+  res.sendFile(path.join(__dirname, "/public/src/logged-out.html"))
 
 })
 app.post('/recape-game', async (req, res) => {
@@ -229,12 +229,12 @@ io.of("/play").on("connection", (socket) => {
 
       app.get(url1, (req, res) => {
         res.sendFile(
-          path.join(__dirname, "/public/src/HTML_Files/white.html")
+          path.join(__dirname, "/public/src/white.html")
         );
       });
       app.get(url2, (req, res) => {
         res.sendFile(
-          path.join(__dirname, "/public/src/HTML_Files/black.html")
+          path.join(__dirname, "/public/src/black.html")
         );
       });
       onlineRequests = [];

@@ -1,5 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
+
 const ACCESS_TOKEN = process.env.LICHESS_API_TOKEN;
 const username = process.env.LICHESS_USER_NAME;
 
@@ -28,6 +29,9 @@ async function fetchDailyPuzzle() {
         return { ok: false, err: "No Internet Connection!" }
     }
 }
+
+
+
 
 
 async function fetchPuzzle(puzzleId) {
@@ -63,4 +67,4 @@ async function fetchPuzzle(puzzleId) {
 
 // Example usage
 
-module.exports = { fetchDailyPuzzle }
+module.exports = { fetchDailyPuzzle, fetchPuzzle }

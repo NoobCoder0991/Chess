@@ -34,7 +34,7 @@ async function handleSignUp(app) {
                 const authenticationToken = { token: authToken, startTime: new Date().getTime(), lifeTime: 300000, valid: true }
                 app.get(`/signup/auth`, (req, res) => {
                     res.sendFile(
-                        path.join(__dirname, "/public/src/HTML_Files/otpauth.html")
+                        path.join(__dirname, "/public/src/otpauth.html")
                     );
                 })
                 res.send({ message: "Email has been sent to your email id: " + requestData.email, ok: true, url: `${authToken}` });
@@ -100,7 +100,6 @@ async function handleSignUp(app) {
         let searchData = await db.collection("users").findOne({ email: requestData.email, password: requestData.password });
         console.log("Search data", searchData)
         if (searchData) {
-            console.log("Allowed")
             let sessionId = helper_functions.generateToken(16);
             req.session.sessionId = sessionId;
             saveUserInfo(requestData.email, sessionId)

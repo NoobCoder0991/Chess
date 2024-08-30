@@ -9,7 +9,7 @@ function handlePlayMyComputerRequests(io, app) {
       const url = helper_functions.generateURL(8);
       app.get("/play/computer/" + url, (req, res) => {
         res.sendFile(
-          path.join(__dirname, "/public/src/HTML_Files/engine.html")
+          path.join(__dirname, "/public/src/engine.html")
         );
       });
       socket.emit("play-mycomputer-responce", {
@@ -43,7 +43,7 @@ function handlePlayMyComputerRequests(io, app) {
       const url = helper_functions.generateURL(8);
       app.get("/play/computer/" + url, (req, res) => {
         res.sendFile(
-          path.join(__dirname, "/public/src/HTML_Files/engine.html")
+          path.join(__dirname, "/public/src/engine.html")
         );
       });
       socket.emit("new-game-responce", {

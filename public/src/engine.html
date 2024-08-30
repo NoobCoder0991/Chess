@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Play with computer</title>
     <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="../../src/CSS_Files/stockfish.css">
+    <link rel="stylesheet" href="../../src/engine.css">
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
@@ -15,6 +15,7 @@
 </head>
 
 <body>
+
 
     <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
 
@@ -105,69 +106,7 @@
             <!-- <img src="/public/piece-images-2/PiChess.png" alt="" class="logo-image"> -->
         </div>
 
-        <div class="nav-options">
-            <ul>
-                <li class="nav-option">
-                    <span>Play <i class="fas fa-caret-down down-arrow-icon"></i></span>
-                    <div class="play-dropdown-cover">
 
-                        <div class="dropdown-option" id="play-online-button">Play Online</div>
-                        <div class="dropdown-option" id="play-mycomputer-button">Play with computer</div>
-                        <div class="dropdown-option" id="play-stockfish-button">Play with stockfish</div>
-                        <div class="dropdown-option" id="play-custom-button">Create a custom game</div>
-                    </div>
-                </li>
-
-                <li class="nav-option">
-                    <span>Puzzles <i class="fas fa-caret-down down-arrow-icon"></i></span>
-                    <div class="play-dropdown-cover">
-
-                        <div class="dropdown-option">Puzzles</div>
-                        <div class="dropdown-option">Daily Puzzle</div>
-                        <div class="dropdown-option">Puzzle Rush</div>
-                        <div class="dropdown-option">Puzzle Battle</div>
-                        <div class="dropdown-option">Solo Chess</div>
-                        <div class="dropdown-option">Drills</div>
-                    </div>
-                </li>
-                <li class="nav-option">
-                    <span>Learn <i class="fas fa-caret-down down-arrow-icon"></i></span>
-                    <div class="play-dropdown-cover">
-
-                        <div class="dropdown-option">Openings</div>
-                        <div class="dropdown-option">Chess Lessons</div>
-                        <div class="dropdown-option">Chess Terms</div>
-                        <div class="dropdown-option">Chess Rules</div>
-                        <div class="dropdown-option">Improve Vision</div>
-                        <div class="dropdown-option">Master Games</div>
-                        <div class="dropdown-option">Explorer</div>
-                    </div>
-                </li>
-                <li class="nav-option">
-                    <span>Today <i class="fas fa-caret-down down-arrow-icon"></i></span>
-                    <div class="play-dropdown-cover">
-
-                        <div class="dropdown-option">Chess Tody</div>
-                        <div class="dropdown-option">Chess TV</div>
-                        <div class="dropdown-option">Playing Now</div>
-                        <div class="dropdown-option">Streamers</div>
-                        <div class="dropdown-option">Events</div>
-                    </div>
-                </li>
-                <li class="nav-option">
-                    <span>More <i class="fas fa-caret-down down-arrow-icon"></i></span>
-                    <div class="play-dropdown-cover">
-
-                        <div class="dropdown-option">Donate</div>
-                        <div class="dropdown-option">Feedback</div>
-                        <div class="dropdown-option">Downloads</div>
-                        <div class="dropdown-option">Contact</div>
-
-                    </div>
-                </li>
-
-            </ul>
-        </div>
     </div>
     <div style="width: 100%; overflow-x: scroll;">
 
@@ -175,16 +114,53 @@
     </div>
 
     <div class="main">
+
+        <div class="computer-search-details-board">
+
+            <div style=" color:#2c3e65;margin-bottom: 2%;">
+                <i class="fas fa-cogs" style="font-size: xx-large;"></i>
+                <span class="engine-title" style="font-size: large;">PiChess Engine</span>
+            </div>
+
+            <div class="list">
+
+                <div class="depth-searched">
+                    <div class="title">Depth Searched</div>
+                    <div class="depth-count">--</div>
+                </div>
+                <div class="time-taked">
+                    <div class="title">Time taken</div>
+                    <div class="time-count">--</div>
+                </div>
+                <div class="transpositions-found">
+                    <div class="title">Transpositions Found</div>
+                    <div class="transpositions-count">--</div>
+                </div>
+                <div class="Nodes searched">
+                    <div class="title">Nodes Evaluated</div>
+                    <div class="nodes-count">--</div>
+                </div>
+            </div>
+        </div>
         <div class="board">
             <div class="player-profile" id="opponent-profile">
                 <div class="profile-icon">
                     <i class="fas fa-cog"></i>
                 </div>
+                <div class="botLabel">BOT</div>
                 <div class="profile-name">
+
+
                     Doubting Rook
                 </div>
                 <div class="profile-rating">
                     (1400)
+
+                </div>
+
+                <div class="search-time">
+
+                    <div class="searching-time">Search completed in : 200ms</div>
 
                 </div>
             </div>
@@ -287,6 +263,7 @@
 
                 </div>
             </div>
+
         </div>
 
 
@@ -298,20 +275,20 @@
 
 
             <div class="actions">
-                <div class="undo-move action ">
+                <div class="analysis-button action ">
                     <div class="icon"><i class="fas fa-chess-board "></i></div>
                 </div>
 
-                <div class="start-move action ">
+                <div class="start-move action disabled-recapeButton ">
                     <div class="icon"><i class="fas fa-fast-backward"></i></div>
                 </div>
-                <div class="previous-move action ">
+                <div class="previous-move action disabled-recapeButton ">
                     <div class="icon"><i class="fas fa-backward"></i></div>
                 </div>
-                <div class="next-move action ">
+                <div class="next-move action disabled-recapeButton ">
                     <div class="icon"><i class="fas fa-forward"></i></div>
                 </div>
-                <div class="end-move action ">
+                <div class="end-move action disabled-recapeButton ">
                     <div class="icon"><i class="fas fa-fast-forward"></i></div>
                 </div>
             </div>
@@ -326,12 +303,16 @@
             <div class="bottom-actions">
                 <div class="resign bottom-action disabled">
                     <div class="icon"><i class="fas fa-flag"></i></div>
+                    <div>Resign</div>
                 </div>
-                <div class="draw bottom-action disabled">
+                <div class="draw bottom-action disabled ">
                     <div class="icon">&frac12</div>
+                    <div>Draw</div>
                 </div>
+                <div class="bottom-action new-game enabled"><i class="fas fa-plus"></i></div>
                 <div class="bottom-action abort enabled">
                     <i class="fas fa-times"></i>
+                    <div>Abort</div>
                 </div>
 
             </div>
@@ -344,6 +325,7 @@
                 <h2>Play vs...</h2>
             </div>
             <div class="opponent-profile">
+
                 <div class="opponent-profile-icon">
                     <i class="fas fa-robot"></i>
                 </div>
@@ -376,7 +358,7 @@
 
             </div>
 
-            <div class="opponent-selection-button" onclick="beginPlay()">
+            <div class="opponent-selection-button big-button" onclick="beginPlay()">
                 Play
             </div>
 
@@ -387,6 +369,9 @@
 
 </body>
 
-<script src="../../src/JS_FIles/stockfish.js"></script>
+<script src="../../src/bitboards.js"></script>
+
+<script src="../../src/zobrist_hashing.js"></script>
+<script src="../../src/engine.js"></script>
 
 </html>

@@ -1,5 +1,6 @@
 // const { spawn } = require("child_process");
 const helper_functions = require("./helper_functions");
+const path = require('path');
 
 function handleStockfishConnections(io, app) {
   var connected = [];
@@ -8,7 +9,7 @@ function handleStockfishConnections(io, app) {
       const url = helper_functions.generateURL(8);
       app.get("/play/stockfish/" + url, (req, res) => {
         res.sendFile(
-          "C:/Users/shafa/Desktop/BIG_FOLDER/Chess Pro Test - 4/public/src/HTML_Files/stockfish.html"
+          path.join(__dirname, "/public/src/stockfish.html")
         );
       });
       socket.emit("play-stockfish-responce", { url: "/play/stockfish/" + url });

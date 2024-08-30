@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Play Online</title>
     <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="../../src/CSS_Files/white.css">
+    <link rel="stylesheet" href="../../src/black.css">
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
@@ -24,12 +24,11 @@
 
             <div>Opponent has offered a Draw</div>
             <div class="accept" onclick="drawAckn()"><i class="fas fa-check"></i></div>
-            <div class="reject" onclick="drawDec()"><i class="fas fa-times"></i></div>
+            <div class="reject " onclick="drawRej()"><i class="fas fa-times"></i></div>
         </div>
     </div>
 
     <img src="../../assets/image-files/black-color-chess-piece-set-free-vector.jpg" class="absolute-image" alt="">
-
     <div class="warning-wrapper">
         <div class="warning-container">
             <div class="mini-logo"> <i class="fas fa-chess"></i>
@@ -58,12 +57,11 @@
             <div class="user-understand-button">
                 <div class="goback"
                     onclick="document.getElementsByClassName('warning-wrapper')[0].style.display='none'">I Understand
-                </div>
+                    >I Understand</div>
             </div>
 
         </div>
     </div>
-
     <div class="gameover-box-wrapper">
 
         <div style="display: flex;flex-direction: column;">
@@ -144,6 +142,7 @@
         <div class="logo">
             <i class="fas fa-chess"></i>
             PiChess.org
+            <!-- <img src="/public/piece-images-2/PiChess.png" alt="" class="logo-image"> -->
         </div>
         <div class="search-bar-mobile">
             <i class="fas fa-search search-icon-mobile"></i>
@@ -232,19 +231,21 @@
 
     <div class="main">
         <div class="board">
-            <div class="topPlayer blackPlayer">
+            <div class="topPlayer whitePlayer">
 
-                <div class="player-profile" id="opponent-profile">
+                <div class="player-profile" id="my-profile">
 
                     <div class="profile-title">
-
 
                     </div>
                     <div class="profile-name">
 
 
+
+
                     </div>
                     <div class="profile-rating">
+
 
 
                     </div>
@@ -254,9 +255,8 @@
                     <div class="reconnected">
                         <i class="fas fa-wifi"></i>
                     </div>
-
                 </div>
-                <div class="timer black-timer disabled-black-timer">
+                <div class="timer white-timer">
                     <div class="timer-icon"><i class="fas fa-stopwatch"></i></div>
                     <div class="min"></div>
                     <div>:</div>
@@ -348,24 +348,17 @@
                     <div class="square light-square"></div>
                 </div>
             </div>
+            <div class="bottomPlayer blackPlayer">
 
-            <div class="bottomPlayer">
-
-                <div class="player-profile" id="my-profile">
+                <div class="player-profile" id="opponent-profile">
 
                     <div class="profile-title">
-
 
                     </div>
                     <div class="profile-name">
 
-
-
                     </div>
                     <div class="profile-rating">
-
-
-
 
                     </div>
                     <div class="reconnecting">
@@ -374,15 +367,15 @@
                     <div class="reconnected">
                         <i class="fas fa-wifi"></i>
                     </div>
+
                 </div>
-                <div class="timer white-timer">
+                <div class="timer black-timer disabled-black-timer">
                     <div class="timer-icon"><i class="fas fa-stopwatch"></i></div>
                     <div class="min"></div>
                     <div>:</div>
                     <div class="sec"></div>
                 </div>
             </div>
-
         </div>
         <div class="second-board">
 
@@ -417,21 +410,18 @@
             </div>
 
             <div class="bottom-actions">
-                <div class="bottom-actions-component-wrapper">
-
-                    <div class="resign bottom-action disabled">
-                        <div class="icon"><i class="fas fa-flag"></i></div>
-                        <div>Resign</div>
-                    </div>
-                    <div class="draw bottom-action disabled ">
-                        <div class="icon">&frac12</div>
-                        <div>Draw</div>
-                    </div>
-                    <div class="bottom-action new-game enabled"><i class="fas fa-plus"></i></div>
-                    <div class="bottom-action abort enabled">
-                        <i class="fas fa-times"></i>
-                        <div>Abort</div>
-                    </div>
+                <div class="resign bottom-action disabled">
+                    <div class="icon"><i class="fas fa-flag"></i></div>
+                    <div>Resign</div>
+                </div>
+                <div class="draw bottom-action disabled ">
+                    <div class="icon">&frac12</div>
+                    <div>Draw</div>
+                </div>
+                <div class="bottom-action new-game enabled"><i class="fas fa-plus"></i></div>
+                <div class="bottom-action abort enabled">
+                    <i class="fas fa-times"></i>
+                    <div>Abort</div>
                 </div>
 
             </div>
@@ -446,6 +436,6 @@
 
 </body>
 
-<script src="../../src/JS_FIles/white.js"></script>
+<script src="../../src/black.js"></script>
 
 </html>
