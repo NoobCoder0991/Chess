@@ -90,7 +90,7 @@ async function sendOTP(email, username, otp) {
     return responce;
   }
   catch (err) {
-    console.log("error")
+    console.log("error", err);
     // throw new Error("Error:", err);
   }
 }
