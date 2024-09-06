@@ -139,11 +139,16 @@ app.post('/fetch-games', async (req, res) => {
   const data = req.body;
   const page = data.page;
   let sessionId = req.session.sessionId;
-  const user = db.collection("session_tokens").findOne({ token: { session_id: sessionId } });
+  const user = await db.collection("session_tokens").findOne({ token: { session_id: sessionId, expired: false } });
+
+  console.log("user", user)
   if (user) {
     const userid = user.userid;
-    const userInfo = db.collection("game_info").findOne({ userid: userid }).info;
+    let userInfo = await db.collection("game_info").findOne({ userid: userid });
+    userInfo = userInfo.info;
+
     const games = userInfo.games;
+
     const len = games.length
     let truncatedGames = [];
 

@@ -25,9 +25,6 @@ if (!perspective) {
 var str;
 
 str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq";
-// str = "r1b1k2r/1pp2pp1/p1Nb4/3q4/B2Pp1p1/2P5/PP2RPP1/RNBQ2K1 kq b"
-// str = "kbK5/pp6/1P6/8/8/8/8/R7 w"; //good puzzle(mate in 2)
-// str = "8/8/8/2P3R1/5B2/2rP1p2/p1P1PP2/RnQ1K2k w Q"; //Best Mate in 2 i have ever seen
 
 let enPassantForWhite = [false, -1];
 let enPassantForBlack = [false, -1];
@@ -57,7 +54,7 @@ var Moves = [];
 var moveTypes = [];
 var pointer = 0;
 var activeMoves = [];
-// //initial indices of kings
+
 var indexOfWhiteKing = FindIndexOfWhiteKing(str);
 var indexOfBlackKing = FindIndexOfBlackKing(str);
 
@@ -1489,7 +1486,7 @@ function rookMovesUsingBitboards(board, index, color) {
   let m = []
   let blockerBitboard = (bitboard.getWhiteBitBoard() | bitboard.getBlackBitboard()) & rook.blockermasks[index];
   let i = ((rookMagicNumbers[index] * blockerBitboard) & 0xffffffffffffffffn) >> 50n;
-  let moves = rook.legalMoves[index][i];
+  let moves = RookMoves[index][i];
   for (move of moves) {
     move.capturePiece = board[move.targetSquare];
     if (board[move.targetSquare] * color <= 0) {
@@ -1506,7 +1503,7 @@ function bishopMovesUsingBitboards(board, index, color) {
   let m = []
   let blockerBitboard = (bitboard.getWhiteBitBoard() | bitboard.getBlackBitboard()) & bishop.blockermasks[index];
   let i = ((bishopMagicNumbers[index] * blockerBitboard) & 0xffffffffffffffffn) >> 50n;
-  let moves = bishop.legalMoves[index][i];
+  let moves = BishopMoves[index][i];
   for (move of moves) {
     move.capturePiece = board[move.targetSquare];
     if (board[move.targetSquare] * color <= 0) {
@@ -1539,16 +1536,11 @@ function legalMoves(board, index, turn) {
     legalmoves = legalmoves.concat(rookMoves(board, index, color))
     // legalmoves = legalmoves.concat(rookMovesUsingBitboards(board, index, color))
 
-
-
   }
 
   else if (piece == 4) {
     legalmoves = legalmoves.concat(bishopMoves(board, index, color))
     // legalmoves = legalmoves.concat(bishopMovesUsingBitboards(board, index, color))
-
-
-
   }
 
   else if (piece == 10) {
@@ -1571,8 +1563,6 @@ function legalMoves(board, index, turn) {
       [x - 1, y - 2],
       [x + 1, y - 2],
     ];
-    let allowedPositions = [];
-
     coordinates.forEach((coordinate) => {
       let squareIndex = coordinatesToIndex(coordinate)
 

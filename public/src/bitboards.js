@@ -43,7 +43,7 @@ class Bitboard {
   }
 
   getBlockerBitboard() {
-    return this.getWhiteBitBoard() | this.getBlackBitboard;
+    return this.getWhiteBitBoard() | this.getBlackBitboard();
   }
 
   _isValidBitboardName(name) {
@@ -71,6 +71,9 @@ class Bitboard {
 
 function updateBitBoard(board, move, reverse) {
   let piece = decodePieceName(board[move.startSquare]);
+
+  const startMask = BigInt(63 - move.startSquare);
+  const targetMask = BigInt(63 - move.targetSquare);
   if (reverse) {
     /**Done after unmoving the move */
 
@@ -80,10 +83,10 @@ function updateBitBoard(board, move, reverse) {
       let currentBitBoard = bitboard.getBitBoard(
         "_" + castlePieceName + "Bitboard"
       );
-      let newBitBoard =
+      currentBitBoard =
         (currentBitBoard | (1n << BigInt(63 - move.castleStart))) &
         ~(1n << BigInt(63 - move.castleEnd));
-      bitboard.updateBitBoard("_" + castlePieceName + "Bitboard", newBitBoard);
+      bitboard.updateBitBoard("_" + castlePieceName + "Bitboard", currentBitBoard);
     }
     if (move.isEnPassant) {
       let enPassantPiece = decodePieceName(board[move.enPassantSquare]);
@@ -98,9 +101,9 @@ function updateBitBoard(board, move, reverse) {
     }
     if (move.isPromotion) {
       let currentBitBoard = bitboard.getBitBoard("_" + piece + "Bitboard");
-      let newBitBoard = (currentBitBoard |=
+      currentBitBoard = (currentBitBoard |=
         1n << BigInt(63 - move.startSquare));
-      bitboard.updateBitBoard("_" + piece + "Bitboard", newBitBoard);
+      bitboard.updateBitBoard("_" + piece + "Bitboard", currentBitBoard);
 
       let promotedPiece = decodePieceName(move.promotionPiece);
       let promotedPieceBitBoard = bitboard.getBitBoard(
@@ -126,12 +129,11 @@ function updateBitBoard(board, move, reverse) {
       );
     }
     if (!move.isPromotion) {
-      /**Normal move , only alters one bitboard */
+      /*Normal move , only alters one bitboard */
       let currentBitBoard = bitboard.getBitBoard("_" + piece + "Bitboard");
-      let newBitBoard =
-        (currentBitBoard & ~(1n << BigInt(63 - move.targetSquare))) |
-        (1n << BigInt(63 - move.startSquare));
-      bitboard.updateBitBoard("_" + piece + "Bitboard", newBitBoard);
+      console.log(currentBitBoard)
+      currentBitBoard = (currentBitBoard & ~(1n << targetMask)) | (1n << startMask);
+      bitboard.updateBitBoard("_" + piece + "Bitboard", currentBitBoard);
     }
 
     return;
@@ -145,10 +147,10 @@ function updateBitBoard(board, move, reverse) {
     let currentBitBoard = bitboard.getBitBoard(
       "_" + castlePieceName + "Bitboard"
     );
-    let newBitBoard =
+    currentBitBoard =
       (currentBitBoard & ~(1n << BigInt(63 - move.castleStart))) |
       (1n << BigInt(63 - move.castleEnd));
-    bitboard.updateBitBoard("_" + castlePieceName + "Bitboard", newBitBoard);
+    bitboard.updateBitBoard("_" + castlePieceName + "Bitboard", currentBitBoard);
   }
   if (move.isEnPassant) {
     /**Move was an enPassant move(rare but can occure, always makes life harder for me!) */
@@ -165,8 +167,8 @@ function updateBitBoard(board, move, reverse) {
   if (move.isPromotion) {
     /**Move was a promotion */
     let currentBitBoard = bitboard.getBitBoard("_" + piece + "Bitboard");
-    let newBitBoard = currentBitBoard & ~(1n << BigInt(63 - move.startSquare));
-    bitboard.updateBitBoard("_" + piece + "Bitboard", newBitBoard);
+    currentBitBoard = currentBitBoard & ~(1n << BigInt(63 - move.startSquare));
+    bitboard.updateBitBoard("_" + piece + "Bitboard", currentBitBoard);
 
     let promotedPiece = decodePieceName(move.promotionPiece);
     let promotedPieceBitBoard = bitboard.getBitBoard(
@@ -193,16 +195,11 @@ function updateBitBoard(board, move, reverse) {
   if (!move.isPromotion) {
     /**Normal move , only alters one bitboard */
     let currentBitBoard = bitboard.getBitBoard("_" + piece + "Bitboard");
-    let newBitBoard =
-      (currentBitBoard & ~(1n << BigInt(63 - move.startSquare))) |
-      (1n << BigInt(63 - move.targetSquare));
-    bitboard.updateBitBoard("_" + piece + "Bitboard", newBitBoard);
+    currentBitBoard =
+      (currentBitBoard & ~(1n << startMask)) |
+      (1n << targetMask);
+    bitboard.updateBitBoard("_" + piece + "Bitboard", currentBitBoard);
   }
-
-
-
-
-
 
 }
 
@@ -234,10 +231,6 @@ function decodePieceName(piece) {
       return "BlackPawn";
   }
 }
-
-
-
-
 
 function generateRookBlockerMask(index) {
   let fileBitboard = 0x0080808080808000n >> BigInt(index % 8);
@@ -429,56 +422,6 @@ function isAdjacent(position1, position2) {
   const colDiff = Math.abs((position1 % boardSize) - (position2 % boardSize));
   return rowDiff <= 1 && colDiff <= 1 && (rowDiff + colDiff !== 0);
 }
-
-// Example usage:
-
-// function generateBishopMoveBoard(blockerBoard, blockermask, bishopIndex) {
-
-//   let moveBoard = blockermask & ~blockerBoard;
-
-//   let str = toBinaryStringWithLeadingZeros(
-//     moveBoard.toString(2).padStart(64, "0")
-//   );
-//   let strArray = str.split("");
-
-//   const directions = [-9, -7, 7, 9]; // up-left, up-right, down-left, down-right
-//   let topLeftEdges = [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 24, 32, 40, 48, 56]
-//   let rightBottomEdges = [7, 15, 23, 31, 39, 47, 55, 63, 56, 57, 58, 59, 60, 61, 62]
-//   let topRightEdges = [0, 1, 2, 3, 4, 5, 6, 7, 15, 23, 31, 39, 47, 55, 63]
-//   let leftBottomEdges = [0, 8, 16, 24, 32, 40, 48, 56, 57, 58, 59, 60, 61, 62, 63]
-//   let edges = [
-//     topLeftEdges, topRightEdges, leftBottomEdges, rightBottomEdges
-//   ]
-
-//   // Iterate over each direction
-//   for (const direction of directions) {
-//     // Calculate the squares along the diagonal
-//     let currentIndex = bishopIndex;
-//     while (true) {
-//       // Check if the current index is within the same diagonal
-
-//       if (strArray[currentIndex] == '0' && currentIndex != bishopIndex) {
-//         let temp = currentIndex;
-//         while (!edges[directions.indexOf(direction)].includes(temp)) {
-//           str[temp] = '0';
-//           temp += direction;
-//         }
-//         strArray[currentIndex] = '1';
-//         break;
-//       }
-
-//       if (edges[directions.indexOf(direction)].includes(currentIndex)) {
-//         break; // Exit loop if the diagonal is crossed
-//       }
-//       currentIndex += direction;
-//     }
-//   }
-
-//   strArray[bishopIndex] = '0'
-
-//   return BigInt("0b" + strArray.join(""));
-
-// }
 
 function printFormattedString(arr) {
   try {
@@ -783,6 +726,9 @@ class Bishop {
 const rook = new Rook();
 const bishop = new Bishop();
 
+const RookMoves = new Array(64);
+const BishopMoves = new Array(64);
+
 let rookMagicNumbers = [16524618453856211166n, 1451668511353402564n, 4745438988781921334n, 13693934794794615810n, 5600584177190259482n, 12607696800710922054n, 11168057394559295662n, 5956057073792100926n, 17568043039664702899n, 16974262240109714090n, 10162077944792371463n, 11722305130264504474n, 16433786174059614942n, 10279023664669933010n, 9347496498472183420n, 3762306639652213678n, 17942327845944621842n, 1147451295084039370n, 2720031786661640926n, 12819727642158656622n, 8544726796192286520n, 15945210302253801267n, 15857423393804903001n, 17178505280001095662n, 14860980580191570147n, 13924477256465891945n, 16694097382345688508n, 7099176327661047532n, 18073928302269186118n, 14123321045071257343n, 7203708970124579595n, 6822395059522280528n, 1892035206030880810n, 13309019355366787145n, 15645703438211509064n, 8666137385533301422n, 8779620057245433839n, 18353525093628843252n, 546547727608977357n, 3798453883736724971n, 18363552109611424714n, 13397350347191186398n, 7903832768578160113n, 6108615567934758673n, 14299076114660050300n, 6520732368422630111n, 2772750671233924249n, 861480082790757807n, 4584076186371584258n, 13039935985995461064n, 14929444501672278370n, 728416023155037671n, 3665088768636079813n, 16484396392455144327n, 10749662975718562869n, 10839317419056035242n, 17562975424696635244n, 5448522739159705812n, 1751749126364629491n, 3059241417284804055n, 17066488107454542314n, 6629273938332255296n, 10873118668636189940n, 8741877732212542179n]
 let bishopMagicNumbers = [11863748893952992351n, 18412267857442289897n, 4698414967439986961n, 3825158127938994325n, 16309571212265136172n, 5589682800482681745n, 518345247305271704n, 9802322225272033402n, 12214120913429090833n, 7459656845509003796n, 18416494059809947410n, 6332736225887130865n, 6461008160072210939n, 5846719470692836231n, 10083596129851027499n, 2877996841369083380n, 15340194234496327686n, 14393724526289479791n, 6561606531468161278n, 15576415112128545205n, 13163260920724423244n, 17671325187006104022n, 7388263221220066555n, 10493641155573121853n, 6129585408911353883n, 15088009075023249535n, 17943363944181694590n, 13836540473006640134n, 16544000445429907576n, 9160412937280569521n, 2679962332872368703n, 4028828350801018962n, 698106591883830047n, 2418574693025203043n, 2261951169414873415n, 6287271572278347281n, 17512601551330415650n, 13830702359834009667n, 12024684622989484773n, 10306079504631971904n, 2813826109298271247n, 765619264993428973n, 9228042557169342895n, 10466658006384158861n, 7980727909704279879n, 6918314636526827524n, 14270494669425088591n, 3821953577692660338n, 1770655005261579291n, 6662609667896247572n, 757682396241219401n, 11297737131186981230n, 18336901253968737037n, 7347341661630437576n, 5132358936671383665n, 585919582514006089n, 14129226830401766276n, 13749948437011370041n, 5746701246073696746n, 14474579154599158633n, 1855940978276926939n, 1262064736270949474n, 4468802631022488248n, 2883159058083780661n]
 for (let i = 0; i < 64; i++) {
@@ -814,7 +760,8 @@ for (let i = 0; i < 64; i++) {
     obj[`${index}`] = moveBoards[j];
   }
 
-  rook.legalMoves[i] = obj;
+  // rook.legalMoves[i] = obj;
+  RookMoves[i] = obj;
 }
 
 /**For bishop */
@@ -850,7 +797,9 @@ for (let i = 0; i < 64; i++) {
     obj[`${index}`] = moveBoards[j];
   }
 
-  bishop.legalMoves[i] = obj;
+  // bishop.legalMoves[i] = obj;
+
+  BishopMoves[i] = obj;
 }
 
 

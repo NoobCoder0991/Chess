@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const fs = require('fs')
-const pug = require('pug')
+const pug = require('pug');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -46,13 +47,13 @@ async function sendEmail(recepientEmail, subject, content) {
     let transporter = nodemailer.createTransport({
       service: 'outlook',
       auth: {
-        user: 'k.shafaat@iitg.ac.in', // Your Outlook email address
-        pass: 'Khushboo@099' // Your Outlook password
+        user: email, // Your Outlook email address
+        pass: password // Your Outlook password
       }
     });
 
     let mailOptions = {
-      from: 'k.shafaat@iitg.ac.in', // Sender address
+      from: email, // Sender address
       to: recepientEmail, // List of receivers
       subject: subject, // Subject line
       html: content // HTML body
@@ -71,7 +72,7 @@ async function sendEmail(recepientEmail, subject, content) {
 
 
 async function sendOTP(email, username, otp) {
-  const filePath = 'C:/Users/shafa/Desktop/BIG_FOLDER/Chess Pro Test - 4/views/email_template.pug';
+  const filePath = path.join(__dirname, '/views/email_template.pug');
 
   try {
 
@@ -95,7 +96,8 @@ async function sendOTP(email, username, otp) {
 }
 
 async function sendAccountDetails(email, username, password) {
-  const filePath = 'C:/Users/shafa/Desktop/BIG_FOLDER/Chess Pro Test - 4/views/account_details_template.pug';
+  const filePath = path.join(__dirname, '/views/account_details_template.pug');
+
 
   try {
     const inputData = { username: username, password: password }
