@@ -1487,7 +1487,7 @@ function rookMovesUsingBitboards(board, index, color) {
   let blockerBitboard = (bitboard.getWhiteBitBoard() | bitboard.getBlackBitboard()) & rook.blockermasks[index];
   let i = ((rookMagicNumbers[index] * blockerBitboard) & 0xffffffffffffffffn) >> 50n;
   let moves = RookMoves[index][i];
-  for (move of moves) {
+  for (let move of moves) {
     move.capturePiece = board[move.targetSquare];
     if (board[move.targetSquare] * color <= 0) {
       m.push(move)
@@ -1504,7 +1504,7 @@ function bishopMovesUsingBitboards(board, index, color) {
   let blockerBitboard = (bitboard.getWhiteBitBoard() | bitboard.getBlackBitboard()) & bishop.blockermasks[index];
   let i = ((bishopMagicNumbers[index] * blockerBitboard) & 0xffffffffffffffffn) >> 50n;
   let moves = BishopMoves[index][i];
-  for (move of moves) {
+  for (let move of moves) {
     move.capturePiece = board[move.targetSquare];
     if (board[move.targetSquare] * color <= 0) {
       m.push(move)
@@ -1513,8 +1513,6 @@ function bishopMovesUsingBitboards(board, index, color) {
 
   return m;
 }
-
-
 
 
 function legalMoves(board, index, turn) {
@@ -2459,7 +2457,6 @@ function evaluatePosition(board, color) {
 
 function endgameEvaluation(board, color) {
   let endgameFactor = totalPieces(board, -color);
-  // let endgameFactor = material(board,-color)
   let evaluation = 0;
   let indexOfMyKing = positionOfKing(color);
   let indexOfOpponentKing = positionOfKing(-color);
@@ -3155,12 +3152,7 @@ function selectOpponent(element) {
   ];
 
   // Accessing the description of the first bot (Timid Pawn)
-  var description_of_timid_pawn = bot_descriptions[0];
 
-  // Accessing the description of the second bot (Faltering Knight)
-  var description_of_faltering_knight = bot_descriptions[1];
-
-  // Similarly, you can access descriptions of other bots using their respective indices
 
   document
     .getElementsByClassName("active-opponent")[0]
@@ -3286,12 +3278,7 @@ function algebraicNotationToMove(algebraicNotation) {
     move.promotionPiece = arr[algebraicNotation[4].toUpperCase()]
 
   }
-
-
-
   return move;
-
-
 
 }
 

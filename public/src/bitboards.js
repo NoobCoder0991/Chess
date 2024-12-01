@@ -70,6 +70,7 @@ class Bitboard {
 }
 
 function updateBitBoard(board, move, reverse) {
+
   let piece = decodePieceName(board[move.startSquare]);
 
   const startMask = BigInt(63 - move.startSquare);

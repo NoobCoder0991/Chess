@@ -4,10 +4,8 @@ const helper_functions = require("./helper_functions")
 const chess = require("./chess")
 
 const path = require("path");
-const { handleDatabase } = require("./database");
 
-async function handleSignUp(app) {
-    const db = await handleDatabase('Chess')
+async function handleSignUp(app, db) {
 
     app.post('/getotp', async (req, res) => {
         const requestData = req.body;
@@ -26,10 +24,8 @@ async function handleSignUp(app) {
             return;
         }
         let code = helper_functions.generateCode(6);
-        console.log("Code", code)
         helper_functions.sendOTP(email, username, code)
             .then(async (data) => {
-                console.log("email sent")
                 const authToken = helper_functions.generateToken(16);
                 const authenticationToken = { token: authToken, otp: code, username, email, startTime: new Date().getTime(), lifeTime: 300000, valid: true }
                 await db.collection('auth-tokens').insertOne(authenticationToken);
@@ -55,8 +51,6 @@ async function handleSignUp(app) {
         const providedOTP = requestData.otp;
         const authenticationToken = await db.collection('auth-tokens').findOne({ otp: providedOTP });
 
-        console.log("authentication token", authenticationToken);
-        console.log("provided details", { providedOTP, providedToken });
         if (authenticationToken && providedToken == authenticationToken.token && providedOTP === authenticationToken.otp && authenticationToken.valid && (new Date().getTime() - authenticationToken.startTime <= authenticationToken.lifeTime)) {
             const password = helper_functions.generateToken(8);
             const email = authenticationToken.email, username = authenticationToken.username;
@@ -92,7 +86,6 @@ async function handleSignUp(app) {
         const requestData = req.body;
 
         let searchData = await db.collection("users").findOne({ email: requestData.email, password: requestData.password });
-        console.log("Search data", searchData)
         if (searchData) {
             let sessionId = helper_functions.generateToken(16);
             req.session.sessionId = sessionId;
@@ -113,7 +106,6 @@ async function handleSignUp(app) {
     })
 
     app.post('/fetch_info', async (req, res) => {
-        const db = await handleDatabase("Chess");
         const sessionId = req.session.sessionId;
         // Ensure this code is inside an async function or use .then() to handle the promise.
         const user = await db.collection("session_tokens").findOne({ "token.session_id": sessionId, "token.expired": false });
@@ -128,31 +120,29 @@ async function handleSignUp(app) {
 
             obj.userid = userid
 
-
-            console.log("obj:", obj)
             res.send({ ok: true, userInfo: obj })
         }
         else {
             res.send({ ok: false, errMessage: "Error fetching data from the server! Reload Browser" })
         }
     })
-}
+    async function saveUserInfo(email, sessionId) {
+        let userData = await db.collection("users").findOne({ email: email });
+        const userid = userData.userid;
 
+        await db.collection('session_tokens').deleteMany({ userid })
 
-async function saveUserInfo(email, sessionId) {
-    const db = await handleDatabase("Chess")
-    let userData = await db.collection("users").findOne({ email: email });
-    const userid = userData.userid;
-
-    await db.collection('session_tokens').deleteMany({ userid })
-
-    const obj = {
-        "userid": userData.userid, "token": {
-            "session_id": sessionId, "expired": false
+        const obj = {
+            "userid": userData.userid, "token": {
+                "session_id": sessionId, "expired": false
+            }
         }
-    }
 
-    await db.collection("session_tokens").insertOne(obj)
+        await db.collection("session_tokens").insertOne(obj)
+    }
 }
+
+
+
 
 module.exports = { handleSignUp }

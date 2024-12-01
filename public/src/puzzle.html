@@ -3192,6 +3192,7 @@
             puzzleData = data.puzzle
             document.getElementsByClassName('profile-rating')[0].innerHTML = "(" + data.puzzle.puzzle.rating + ")"
             let moves = data.puzzle.game.game;
+
             for (let move of moves) {
                 move.capturePiece = board[move.targetSquare]
                 MakeMove(board, move, true, true)

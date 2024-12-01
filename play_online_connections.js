@@ -5,9 +5,8 @@ const { handleDatabase } = require("./database");
 
 
 
-async function handlePlayOnlineConnections(online) {
+async function handlePlayOnlineConnections(online, db) {
 
-  var db = await handleDatabase('Chess')
 
   var onlinePlayers = [];
   var roomCount = 1;
@@ -25,7 +24,7 @@ async function handlePlayOnlineConnections(online) {
         if (socket.gameOver || socket.oppositeSocket.gameOver) {
           socket.emit("gameover", { ok: false });
         } else {
-          updateTimer(socket);
+          updateTimer(socket, db);
         }
       } else if (onlinePlayers.length % 2 == 0) {
         socket.userid = data.userid;
@@ -177,8 +176,8 @@ async function handlePlayOnlineConnections(online) {
           opponentInfo: userInfo1.info,
         });
 
-        updateTimer(socket1);
-        updateTimer(socket2);
+        updateTimer(socket1, db);
+        updateTimer(socket2, db);
       }
 
       socket.on("PlayedMove", (data) => {
@@ -240,6 +239,7 @@ async function handlePlayOnlineConnections(online) {
 
             if (result.result == "checkmate") {
               updateUserInfo(
+                db,
                 socket,
                 userid,
                 opponentUserid,
@@ -250,6 +250,7 @@ async function handlePlayOnlineConnections(online) {
               );
             } else if (result.result == "stalemate") {
               updateUserInfo(
+                db,
                 socket,
                 (socket.color == 1 ? userid : opponentUserid),
                 (socket.color == 1 ? opponentUserid : userid),
@@ -287,7 +288,7 @@ async function handlePlayOnlineConnections(online) {
       socket.on('resign', data => {
         const userid = socket.userid;
         const opponentUserid = socket.oppositeSocket.userid
-        updateUserInfo(socket.oppositeSocket, opponentUserid, userid, socket.oppositeSocket.game_details, socket.game_details, -socket.color, "Resignation"
+        updateUserInfo(db, socket.oppositeSocket, opponentUserid, userid, socket.oppositeSocket.game_details, socket.game_details, -socket.color, "Resignation"
         );
 
       })
@@ -308,7 +309,7 @@ async function handlePlayOnlineConnections(online) {
 
           const userid = socket.userid;
           const opponentUserid = socket.oppositeSocket.userid
-          updateUserInfo((socket.color == 1 ? socket : socket.oppositeSocket), (socket.color == 1 ? userid : opponentUserid), (socket.color == 1 ? opponentUserid : userid), (socket.color == 1 ? socket.game_details : socket.oppositeSocket.game_details), (socket.color == 1 ? socket.oppositeSocket.game_details : socket.game_details), 0, "Mutual Settlement"
+          updateUserInfo(db, (socket.color == 1 ? socket : socket.oppositeSocket), (socket.color == 1 ? userid : opponentUserid), (socket.color == 1 ? opponentUserid : userid), (socket.color == 1 ? socket.game_details : socket.oppositeSocket.game_details), (socket.color == 1 ? socket.oppositeSocket.game_details : socket.game_details), 0, "Mutual Settlement"
           );
         }
       })
@@ -343,16 +344,8 @@ function retrieveSocketData(socket, match) {
   match.socket = socket;
 }
 
-async function updateUserInfo(
-  socket,
-  winnerId,
-  loserId,
-  winnerGameState,
-  loseGameState,
-  winner,
-  reason
-) {
-  const db = await handleDatabase("Chess")
+async function updateUserInfo(db, socket, winnerId, loserId, winnerGameState, loseGameState, winner, reason) {
+
   socket.gameOver = true;
   socket.oppositeSocket.gameOver = true;
   let perspective = socket.color
@@ -362,64 +355,35 @@ async function updateUserInfo(
   let simplifiedWinnerGame = "";
   for (move of winnerGameState.Moves) {
     let m = chess.simplifyMoveNotation(move, perspective);
-    simplifiedWinnerGame += m;
-    simplifiedWinnerGame += " ";
+    simplifiedWinnerGame += m + " ";
   }
   let simplifiedLoserGame = "";
   for (move of loseGameState.Moves) {
     let m = chess.simplifyMoveNotation(move, -perspective);
-    simplifiedLoserGame += m;
-    simplifiedLoserGame += " ";
+    simplifiedLoserGame += m + " ";
   }
   const date = helper_functions.getDate();
   const resultFen = chess.boardToFen(winnerGameState.board, perspective).split(" ")[0];
   const winnerGameId = helper_functions.generateCode(6)
   const loserGameId = helper_functions.generateCode(6)
-  winnerInfo.info.games.push(
+  const newWinnerGame = (
     JSON.stringify({
-      game: simplifiedWinnerGame,
-      pgn: winnerGameState.pgn,
-      gameId: winnerGameId,
-      perspective: perspective,
-      myId: winnerId,
-      opponentId: loserId,
-      winnerUsername: winnerInfo.info.username,
-      loserUsername: loserInfo.info.username,
-      winnerRating: winnerInfo.info.rating,
-      loserRating: loserInfo.info.rating,
-      winner: winner,
-      date: date,
-      reason: reason,
-      resultFen
+      game: simplifiedWinnerGame, pgn: winnerGameState.pgn, gameId: winnerGameId, perspective: perspective, myId: winnerId, opponentId: loserId, winnerUsername: winnerInfo.info.username, loserUsername: loserInfo.info.username, winnerRating: winnerInfo.info.rating, loserRating: loserInfo.info.rating, winner: winner, date: date, reason: reason, resultFen
     })
   );
-  loserInfo.info.games.push(
+  const newLoserGame = (
     JSON.stringify({
-      game: simplifiedLoserGame,
-      pgn: loseGameState.pgn,
-      gameId: loserGameId,
-      perspective: -perspective,
-      myId: loserId,
-      opponentId: winnerId,
-      winnerUsername: winnerInfo.info.username,
-      loserUsername: loserInfo.info.username,
-      winnerRating: winnerInfo.info.rating,
-      loserRating: loserInfo.info.rating,
-      winner: winner,
-      date: date,
-      reason: reason,
-      resultFen
+      game: simplifiedLoserGame, pgn: loseGameState.pgn, gameId: loserGameId, perspective: -perspective, myId: loserId, opponentId: winnerId, winnerUsername: winnerInfo.info.username, loserUsername: loserInfo.info.username, winnerRating: winnerInfo.info.rating, loserRating: loserInfo.info.rating, winner: winner, date: date, reason: reason, resultFen
     })
   );
 
   if (winner) {
     // Constants
-    const K_FACTOR1 = 800 / (1 + winnerInfo.info.total_games);
-    const K_FACTOR2 = 800 / (1 + loserInfo.info.total_games);
+    const K_FACTOR1 = 200 / (1 + winnerInfo.info.total_games);
+    const K_FACTOR2 = 200 / (1 + loserInfo.info.total_games);
 
     // Calculate expected scores
-    const winnerExpectedScore =
-      1 / (1 + 10 ** ((loserInfo.info.rating - winnerInfo.info.rating) / 400));
+    const winnerExpectedScore = 1 / (1 + 10 ** ((loserInfo.info.rating - winnerInfo.info.rating) / 200));
     const loserExpectedScore = 1 - winnerExpectedScore;
 
     // Update ratings
@@ -428,29 +392,40 @@ async function updateUserInfo(
 
     // Return updated user info
 
-    winnerInfo.rating = Math.max(250, winnerInfo.info.rating + winnerRatingChange);
-    loserInfo.rating = Math.max(250, loserInfo.info.rating + loserRatingChange);
+    const newWinnerRating = Math.max(250, winnerInfo.info.rating + winnerRatingChange);
+    const newLoserRating = Math.max(250, loserInfo.info.rating + loserRatingChange);
+
+    winnerInfo.rating = newWinnerRating;
+    loserInfo.rating = newLoserRating;
     winnerInfo.info.games_won++;
     loserInfo.info.games_lost++;
+
+    await db.collection("game_info").updateOne({ userid: winnerId }, { $set: { "info.rating": newWinnerRating } })
+    await db.collection("game_info").updateOne({ userid: loserId }, { $set: { "info.rating": newLoserRating } })
+    await db.collection("game_info").updateOne({ userid: winnerId }, { $set: { "info.total_games": winnerInfo.info.total_games } })
+    await db.collection("game_info").updateOne({ userid: loserId }, { $set: { "info.total_games": loserInfo.info.total_games } })
   }
 
   winnerInfo.info.total_games++;
   loserInfo.info.total_games++;
 
+  await db.collection("game_info").updateOne({ userid: winnerId }, { $push: { "info.games": newWinnerGame } })
+  await db.collection("game_info").updateOne({ userid: loserId }, { $push: { "info.games": newLoserGame } })
+
   if (winner == 1) {
     winnerInfo.info.games_won_as_white++;
+    await db.collection("game_info").updateOne({ userid: winnerId }, { $set: { "info.games_won_as_white": winnerInfo.info.games_won_as_white } })
+
   } else if (winner == -1) {
     winnerInfo.info.games_won_as_black++;
+    await db.collection("game_info").updateOne({ userid: winnerId }, { $set: { "info.games_won_as_black": winnerInfo.info.games_won_as_black } })
   } else {
     winnerInfo.info.games_draw++;
     loserInfo.info.games_draw++;
+    await db.collection("game_info").updateOne({ userid: winnerId }, { $set: { "info.games_draw": winnerInfo.info.games_draw } })
+    await db.collection("game_info").updateOne({ userid: loserId }, { $set: { "info.games_draw": loserInfo.info.games_draw } })
   }
-  console.log("winner Info", winnerInfo)
-  console.log("loser Info", loserInfo)
 
-
-  await db.collection("game_info").updateOne({ userid: winnerId }, { $set: { "info": winnerInfo.info } });
-  await db.collection("game_info").updateOne({ userid: loserId }, { $set: { "info": loserInfo.info } });
   winnerInfo.info.ratingChange = winnerRatingChange;
   loserInfo.info.ratingChange = loserRatingChange;
   socket.emit("gameover", {
@@ -467,7 +442,7 @@ async function updateUserInfo(
   });
 }
 
-function updateTimer(socket) {
+function updateTimer(socket, db) {
   if (socket.disconnected) {
     return;
   }
@@ -480,7 +455,7 @@ function updateTimer(socket) {
   if (socket.remainingTime <= 0) {
     socket.remainingTime = 0;
 
-    updateUserInfo(socket.oppositeSocket, socket.oppositeSocket.userid, socket.userid, socket.oppositeSocket.game_details, socket.game_details, -socket.color, "Timeout")
+    updateUserInfo(db, socket.oppositeSocket, socket.oppositeSocket.userid, socket.userid, socket.oppositeSocket.game_details, socket.game_details, -socket.color, "Timeout")
     return;
   }
 
@@ -497,7 +472,7 @@ function updateTimer(socket) {
   });
 
   setTimeout(() => {
-    updateTimer(socket);
+    updateTimer(socket, db);
   }, 50);
 }
 module.exports = { handlePlayOnlineConnections };

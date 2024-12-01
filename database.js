@@ -17,7 +17,9 @@ const client = new MongoClient(uri, {
     }
 }
 );
-async function handleDatabase(database) {
+
+let db;
+async function initializeDatabase(database) {
     try {
         // Connect the client to the server (optional starting in v4.7)
         await client.connect();
@@ -25,7 +27,7 @@ async function handleDatabase(database) {
         await client.db("admin").command({ ping: 1 });
         console.log("Connected to database")
 
-        return client.db(database)
+        db = client.db(database)
 
     }
     catch (err) {
@@ -33,6 +35,15 @@ async function handleDatabase(database) {
     }
 }
 
-module.exports = { handleDatabase }
+function getDatabase() {
+    if (db) {
+        return db;
+    }
+    else {
+        throw new Error("Database not initialized!")
+    }
+}
+
+module.exports = { initializeDatabase, getDatabase }
 
 
